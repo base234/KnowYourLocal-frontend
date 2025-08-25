@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-fern-50: #f3faf3;
+  --color-fern-100: #e4f4e4;
+  --color-fern-200: #c9e9cb;
+  --color-fern-300: #9fd6a3;
+  --color-fern-400: #58b15f;
+  --color-fern-500: #499e50;
+  --color-fern-600: #37823e;
+  --color-fern-700: #2e6733;
+  --color-fern-800: #29522d;
+  --color-fern-900: #234427;
+  --color-fern-950: #0f2412;
+
+  --color-razzmatazz-50: #fdf2f7;
+  --color-razzmatazz-100: #fce7f1;
+  --color-razzmatazz-200: #fbcfe5;
+  --color-razzmatazz-300: #f9a8ce;
+  --color-razzmatazz-400: #f472ac;
+  --color-razzmatazz-500: #ec488d;
+  --color-razzmatazz-600: #d72466;
+  --color-razzmatazz-700: #be1850;
+  --color-razzmatazz-800: #9d1743;
+  --color-razzmatazz-900: #83183b;
+  --color-razzmatazz-950: #50071e;
+
+  --color-lochmara-50: #f0f9ff;
+  --color-lochmara-100: #e0f2fe;
+  --color-lochmara-200: #bbe5fc;
+  --color-lochmara-300: #7ed1fb;
+  --color-lochmara-400: #3abaf6;
+  --color-lochmara-500: #10a1e7;
+  --color-lochmara-600: #047fc2;
+  --color-lochmara-700: #05679f;
+  --color-lochmara-800: #085784;
+  --color-lochmara-900: #0d496d;
+  --color-lochmara-950: #092e48;
+}

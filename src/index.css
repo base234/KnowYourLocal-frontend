@@ -1,0 +1,255 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: "Inter", sans-serif;
+    color: #3b3b3b;
+  }
+}
+
+@layer components {
+  /* Custom animations for onboarding */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  .animate-fade-out-left {
+    animation: fadeOutLeft 0.6s ease-in-out;
+  }
+
+  .animate-fade-out-right {
+    animation: fadeOutRight 0.6s ease-in-out;
+  }
+
+  .animate-fade-in-left {
+    animation: fadeInLeft 0.6s ease-in-out;
+  }
+
+  .animate-fade-in-right {
+    animation: fadeInRight 0.6s ease-in-out;
+  }
+
+  /* Custom slider styling */
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .slider::-webkit-slider-track {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #10b981;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .slider::-moz-range-track {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  .slider::-moz-range-thumb {
+    background: #10b981;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Map container styling */
+  .map-container {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  /* HTML content styling for formatted responses */
+  .html-content {
+    line-height: 1.6;
+  }
+
+  .html-content h1,
+  .html-content h2,
+  .html-content h3,
+  .html-content h4,
+  .html-content h5,
+  .html-content h6 {
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    color: #1f2937;
+  }
+
+  .html-content h1 {
+    font-size: 1.5em;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5em;
+  }
+
+  .html-content h2 {
+    font-size: 1.25em;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.25em;
+  }
+
+  .html-content h3 {
+    font-size: 1.125em;
+  }
+
+  .html-content p {
+    margin-bottom: 1em;
+  }
+
+  .html-content ul,
+  .html-content ol {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+  }
+
+  .html-content li {
+    margin-bottom: 0.5em;
+  }
+
+  .html-content ul {
+    list-style-type: disc;
+  }
+
+  .html-content ol {
+    list-style-type: decimal;
+  }
+
+  .html-content blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding-left: 1em;
+    margin: 1em 0;
+    font-style: italic;
+    color: #6b7280;
+  }
+
+  .html-content code {
+    background-color: #f3f4f6;
+    padding: 0.125em 0.25em;
+    border-radius: 0.25em;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.875em;
+  }
+
+  .html-content pre {
+    background-color: #f3f4f6;
+    padding: 1em;
+    border-radius: 0.5em;
+    overflow-x: auto;
+    margin: 1em 0;
+  }
+
+  .html-content pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  .html-content strong {
+    font-weight: 600;
+  }
+
+  .html-content em {
+    font-style: italic;
+  }
+
+  .html-content a {
+    color: #3b82f6;
+    text-decoration: underline;
+  }
+
+  .html-content a:hover {
+    color: #1d4ed8;
+  }
+
+  .html-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+
+  .html-content th,
+  .html-content td {
+    border: 1px solid #e5e7eb;
+    padding: 0.5em;
+    text-align: left;
+  }
+
+  .html-content th {
+    background-color: #f9fafb;
+    font-weight: 600;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
