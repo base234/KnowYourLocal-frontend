@@ -450,8 +450,8 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
 
             {/* Loading Overlay */}
             {isLoading && (
-              <div className="absolute inset-0 bg-white/50 bg-opacity-50 flex items-center justify-center rounded-lg">
-                <div className="opacity-50">
+              <div className="absolute inset-0 bg-white/80 bg-opacity-50 flex items-center justify-center rounded-lg">
+                <div className="opacity-60">
                   <EarthLoader />
                 </div>
               </div>

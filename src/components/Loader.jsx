@@ -6,7 +6,7 @@ export default function Loader() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-tl from-blue-200 to-white">
       <EarthLoader />
       <div className="mt-4 text-center">
-        <div className="mt-2 text-sm text-gray-500">
+        <div className="mt-2 text-gray-500">
           Loading your experience...
         </div>
       </div>
