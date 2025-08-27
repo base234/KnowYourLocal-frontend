@@ -5,28 +5,62 @@ import {
   Marker,
   Circle,
 } from "@react-google-maps/api";
-import { LoaderCircle, MapPin, Search } from "lucide-react";
+import { ChevronRight, LoaderCircle, MapPin, Search } from "lucide-react";
 import EarthLoader from "@/components/EarthLoader.jsx";
 
-const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [searchedLocation, setSearchedLocation] = useState(null);
+const GoogleMap = ({
+  onLocationSelect,
+  initialRadius = 14,
+  initialLocation = null,
+  readOnly = false,
+  eventDetails = null,
+  onLoadingChange = null,
+}) => {
+  const [currentLocation, setCurrentLocation] = useState(initialLocation);
+  const [searchedLocation, setSearchedLocation] = useState(initialLocation);
   const [searchQuery, setSearchQuery] = useState("");
   const [radius, setRadius] = useState(initialRadius);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [hasLocation, setHasLocation] = useState(false);
+  const [hasLocation, setHasLocation] = useState(!!initialLocation);
   const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
-  const [mapCenter, setMapCenter] = useState({ lat: 51.505, lng: -0.09 }); // Default center (London)
+  const [mapCenter, setMapCenter] = useState(
+    initialLocation || { lat: 51.505, lng: -0.09 }
+  ); // Default center (London)
 
   const mapRef = useRef(null);
   const searchInputRef = useRef(null);
 
   // Check if we have any location
   useEffect(() => {
-    setHasLocation(!!(currentLocation || searchedLocation));
-  }, [currentLocation, searchedLocation]);
+    // If we have an initial location, use that
+    if (initialLocation && !currentLocation && !searchedLocation) {
+      setCurrentLocation(initialLocation);
+      setSearchedLocation(initialLocation);
+      setMapCenter(initialLocation);
+      setHasLocation(true);
+    } else {
+      setHasLocation(!!(currentLocation || searchedLocation));
+    }
+  }, [currentLocation, searchedLocation, initialLocation]);
+
+  // Additional effect to handle initialLocation changes
+  useEffect(() => {
+    if (initialLocation) {
+      setCurrentLocation(initialLocation);
+      setSearchedLocation(initialLocation);
+      setMapCenter(initialLocation);
+      setHasLocation(true);
+    }
+  }, [initialLocation]);
+
+  // Notify parent component of loading state changes
+  useEffect(() => {
+    if (onLoadingChange) {
+      onLoadingChange(isLoading);
+    }
+  }, [isLoading, onLoadingChange]);
 
   // Request user's current location
   const requestUserLocation = () => {
@@ -50,6 +84,7 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
               address: "Your Current Location",
               coordinates: location,
               radius: radius,
+              searchLocation: null, // Current location has no search query
             });
           }
         },
@@ -120,6 +155,7 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
               address: location.address,
               coordinates: { lat: location.lat, lng: location.lng },
               radius: radius,
+              searchLocation: searchQuery.trim(), // Include the search query used
             });
           }
         } else {
@@ -156,10 +192,24 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
   // Get the active location (searched or current)
   const activeLocation = searchedLocation || currentLocation;
 
-  // If no location yet, show the location input and get location button
-  if (!hasLocation) {
+  // Debug logging
+  console.log("GoogleMap state:", {
+    initialLocation,
+    currentLocation,
+    searchedLocation,
+    hasLocation,
+    readOnly,
+    activeLocation,
+  });
+
+  // If no location yet and not in read-only mode, show the location input and get location button
+  // Also show the form if we're in read-only mode but don't have a location yet
+  if (
+    (!hasLocation && !readOnly) ||
+    (readOnly && !hasLocation && !initialLocation)
+  ) {
     return (
-      <div className="w-full max-w-2xl mx-auto p-6">
+      <div className="w-full p-4 lg:p-0">
         {/* Location Search Input */}
         <div className="mb-6">
           <form onSubmit={handleSearchSubmit} className="flex space-x-3">
@@ -263,126 +313,8 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
         }
       `}</style>
 
-      <div className="flex items-start gap-4">
-        <div className="w-1/2">
-          {/* Location Search and Get My Location Controls */}
-          <div className="mb-6 space-y-4">
-            {/* Location Search Input */}
-            <div>
-              <form onSubmit={handleSearchSubmit} className="flex space-x-3">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for a new location..."
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  {/* Search button only appears when there's text in the input */}
-                  {searchQuery.trim() && (
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isLoading ? "..." : "Search"}
-                    </button>
-                  )}
-                </div>
-              </form>
-            </div>
-
-            {/* Get My Location Button */}
-            <div className="w-full p-0.5 border border-blue-200 rounded-lg">
-              <div className="w-full p-4 bg-gradient-to-tl from-blue-100 to-white rounded-lg text-center">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="p-2 bg-blue-200 rounded-full">
-                      <MapPin className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <h4 className="font-semibold text-blue-600 text-sm">
-                      Get Your Current Location
-                    </h4>
-                  </div>
-                  <button
-                    onClick={requestUserLocation}
-                    disabled={isLoading}
-                    className="px-4 py-2 text-sm font-semibold bg-blue-500 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <LoaderCircle className="w-4 h-4 animate-spin" />
-                        <span>Getting location...</span>
-                      </div>
-                    ) : (
-                      "Get My Location"
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Error Display */}
-            {error && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Divider */}
-          <hr className="my-10 border-gray-300 border-dashed" />
-
-          {/* Location Details */}
-          {activeLocation && (
-            <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-900 mb-2">
-                Selected Location
-              </h3>
-              <div className="space-y-2 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-gray-500" />
-                  <span>
-                    {activeLocation.address ||
-                      activeLocation.name ||
-                      "Your Current Location"}
-                  </span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  Coordinates: {activeLocation.lat.toFixed(6)},{" "}
-                  {activeLocation.lng.toFixed(6)}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Radius Control */}
-          <div className="mt-10 mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Search Radius: {radius} km
-            </label>
-            <input
-              type="range"
-              min="1"
-              max="25"
-              step={1}
-              value={radius}
-              onChange={(e) => setRadius(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-              <span>1 km</span>
-              <span>5 km</span>
-              <span>10 km</span>
-              <span>15 km</span>
-              <span>20 km</span>
-              <span>25 km</span>
-            </div>
-          </div>
-        </div>
-        <div className="w-1/2">
+      <div className={`${readOnly ? "flex-col" : "flex items-start gap-8"}`}>
+        <div className={`${readOnly ? "w-full" : "w-1/2"}`}>
           {/* Map Container */}
           <div className="relative rounded-lg mb-6">
             <LoadScript
@@ -391,7 +323,9 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
               onError={handleScriptLoadError}
             >
               <GoogleMapComponent
-                mapContainerClassName="w-full h-[512px] rounded-lg border border-gray-300"
+                mapContainerClassName={`w-full ${
+                  readOnly ? "h-96" : "h-[512px]"
+                } rounded-lg border border-gray-300`}
                 center={mapCenter}
                 zoom={14}
                 onLoad={onMapLoad}
@@ -450,8 +384,8 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
 
             {/* Loading Overlay */}
             {isLoading && (
-              <div className="absolute inset-0 bg-white/80 bg-opacity-50 flex items-center justify-center rounded-lg">
-                <div className="opacity-60">
+              <div className="absolute inset-0 bg-white/90 bg-opacity-50 flex items-center justify-center rounded-lg">
+                <div className="opacity-70 animate-pulse">
                   <EarthLoader />
                 </div>
               </div>
@@ -467,6 +401,161 @@ const GoogleMap = ({ onLocationSelect, initialRadius = 14 }) => {
             )}
           </div>
         </div>
+        {!readOnly && (
+          <div className="w-1/2">
+            {/* Location Search and Get My Location Controls */}
+            <div className="mb-6 space-y-4">
+              {/* Location Search Input */}
+              <div>
+                <form onSubmit={handleSearchSubmit} className="flex space-x-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search for a new location..."
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    {/* Search button only appears when there's text in the input */}
+                    {searchQuery.trim() && (
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isLoading ? "..." : "Search"}
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
+
+              {/* Get My Location Button */}
+              <div className="w-full p-0.5 border border-blue-200 rounded-lg">
+                <div className="w-full p-4 bg-gradient-to-tl from-blue-100 to-white rounded-lg text-center">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center space-x-2">
+                      <div className="p-2 bg-blue-200 rounded-full">
+                        <MapPin className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <h4 className="font-semibold text-blue-600 text-sm">
+                        Get Your Current Location
+                      </h4>
+                    </div>
+                    <button
+                      onClick={requestUserLocation}
+                      disabled={isLoading}
+                      className="px-4 py-2 text-sm font-semibold bg-blue-500 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <LoaderCircle className="w-4 h-4 animate-spin" />
+                          <span>Getting location...</span>
+                        </div>
+                      ) : (
+                        "Get My Location"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Error Display */}
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Divider */}
+            <hr className="my-6 border-gray-300 border-dashed" />
+
+            {/* Event Details Above Radius Slider */}
+            {eventDetails && (
+              <div className="flex items-start gap-4">
+                <div>
+                  <p className="text-sm text-gray-500 capitalize flex items-center space-x-2">
+                    <span>
+                      {eventDetails.icon || "🎯"}&nbsp;&nbsp;
+                      {eventDetails.type || ""}
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                    <span className="font-medium text-gray-700">
+                      {eventDetails.name || ""}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Divider */}
+            <hr className="my-6 border-gray-300 border-dashed" />
+
+            {/* Location Details */}
+            {activeLocation && (
+              <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                <div className="space-y-2 text-sm text-gray-700">
+                    <p>
+                      {activeLocation.address ||
+                        activeLocation.name ||
+                        "Your Current Location (GPS)"}
+                    </p>
+                  <div className="text-sm text-gray-500">
+                    Coordinates: {activeLocation.lat.toFixed(6)},{" "}
+                    {activeLocation.lng.toFixed(6)}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Radius Control */}
+            <div className="mt-10 mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Search Radius: {radius} km
+              </label>
+              <input
+                type="range"
+                min="1"
+                max="25"
+                step={1}
+                value={radius}
+                onChange={(e) => {
+                  const newRadius = parseInt(e.target.value);
+                  setRadius(newRadius);
+                  // Update the parent component with the new radius
+                  if (onLocationSelect && activeLocation) {
+                    onLocationSelect({
+                      address:
+                        activeLocation.address ||
+                        activeLocation.name ||
+                        "Your Current Location",
+                      coordinates: {
+                        lat: activeLocation.lat,
+                        lng: activeLocation.lng,
+                      },
+                      radius: newRadius,
+                      searchLocation: searchedLocation
+                        ? searchQuery.trim()
+                        : null,
+                    });
+                  }
+                }}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-2">
+                <span>1 km</span>
+                <span>5 km</span>
+                <span>10 km</span>
+                <span>15 km</span>
+                <span>20 km</span>
+                <span>25 km</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
