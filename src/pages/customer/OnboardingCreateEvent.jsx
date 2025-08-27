@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Api from "@/api/api";
-import SmartModal from "@/components/SmartModal";
 import GoogleMap from "@/components/GoogleMap";
 import {
   ArrowLeft,
@@ -10,6 +9,7 @@ import {
   ChevronRight,
   LoaderCircle,
 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 export default function OnboardingCreateEvent() {
   const [formData, setFormData] = useState({
@@ -168,7 +168,13 @@ export default function OnboardingCreateEvent() {
     await Api.post("/events", payload)
       .then((response) => {
         markEventAsCreated();
-        navigate("/dashboard");
+        confetti({
+          particleCount: 50,
+          spread: 70,
+          origin: { y: 1.1 },
+          startVelocity: 80,
+        });
+        // navigate("/dashboard");
       })
       .catch((error) => {
         setError(
