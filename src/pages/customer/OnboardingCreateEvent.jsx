@@ -175,17 +175,21 @@ export default function OnboardingCreateEvent() {
     }
 
     try {
-      const localPayload = {
-        name: formData.event_name.trim(),
-        description: formData.description.trim() || "",
-        local_type_id: formData.local_type_id,
-        user_id: user?.id,
+      const onboardingPayload = {
+        data: {
+          local: {
+            name: formData.event_name.trim(),
+            description: formData.description.trim() || "",
+            user_id: user?.id,
+            local_type_id: formData.local_type_id,
+          }
+        }
       };
 
-      await Api.post("/locals", localPayload);
-      console.log("Local data saved successfully");
+      await Api.post("/onboarding", onboardingPayload);
+      console.log("Onboarding data saved successfully");
     } catch (error) {
-      console.error("Error saving local data:", error);
+      console.error("Error saving onboarding data:", error);
       // Don't show error to user as this is a background save
       // The main event creation will still work
     }
