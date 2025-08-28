@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const Api = axios.create({
-  baseURL: import.meta.env.VITE_APP_BACKEND_API,
+  baseURL: import.meta.env.VITE_APP_BACKEND_API || "http://localhost:3333",
   // timeout: 5000, // Optional: Set timeout for requests
 });
 

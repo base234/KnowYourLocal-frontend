@@ -20,17 +20,82 @@ export default function OnboardingCreateEvent() {
     search_location: null, // Add search location field
     radius_km: 2,
     description: "",
+    local_type_id: null,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [showSmartModal, setShowSmartModal] = useState(false);
   const [selectedUserType, setSelectedUserType] = useState("");
   const [step, setStep] = useState(1);
+  const [userTypes, setUserTypes] = useState([]);
+  const [isUserTypesLoading, setIsUserTypesLoading] = useState(true);
+  const [userTypesError, setUserTypesError] = useState("");
 
   const { user, markEventAsCreated } = useAuth();
   const navigate = useNavigate();
+
+  // Fetch user types from API
+  useEffect(() => {
+    const fetchUserTypes = async () => {
+      try {
+        setIsUserTypesLoading(true);
+        setUserTypesError("");
+        const response = await Api.get("/local-types");
+        
+        // Transform the API response to match the expected format
+        const transformedUserTypes = response.data.map((type) => ({
+          id: type.name.toLowerCase().replace(/\s+/g, "_"),
+          title: type.name,
+          description: type.description,
+          short_description: type.short_description,
+          icon: type.icon,
+          uuid: type.uuid,
+          originalId: type.id
+        }));
+        
+        setUserTypes(transformedUserTypes);
+      } catch (error) {
+        console.error("Error fetching local types:", error);
+        setUserTypesError("Failed to load local types. Please refresh the page.");
+        
+        // Fallback to static user types if API fails
+        const fallbackUserTypes = [
+          {
+            id: "event_planner",
+            title: "Event Planner",
+            description:
+              "Event planner, looking for venues, supporting ecosystems, and neighborhood dynamics.",
+            icon: "🎯",
+          },
+          {
+            id: "newcomer",
+            title: "Newcomer",
+            description:
+              "New at city, looking for hotels, places to stay, know your local shops and more.",
+            icon: "🆕",
+          },
+          {
+            id: "tourist",
+            title: "Tourist",
+            description: "Easy navigation + Authentic Experiences = Sounds Cool",
+            icon: "🧳",
+          },
+          {
+            icon: "🏠",
+            id: "local",
+            title: "Local",
+            description:
+              "Discover hidden gems + know your neighbourhood + local updates",
+          },
+        ];
+        setUserTypes(fallbackUserTypes);
+      } finally {
+        setIsUserTypesLoading(false);
+      }
+    };
+
+    fetchUserTypes();
+  }, []);
 
   // Prevent access if user already has an event created or doesn't have customer role
   useEffect(() => {
@@ -41,8 +106,8 @@ export default function OnboardingCreateEvent() {
     }
   }, [user, navigate]);
 
-  // Show loading while checking user status
-  if (!user) {
+  // Show loading while checking user status or fetching user types
+  if (!user || isUserTypesLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -61,6 +126,10 @@ export default function OnboardingCreateEvent() {
   const handleUserTypeSelect = (userType) => {
     // Reset all form data when user type changes
     setSelectedUserType(userType);
+    
+    // Find the selected user type to get the originalId for API calls
+    const selectedType = userTypes.find(type => type.id === userType);
+    
     setFormData({
       event_name: "",
       event_type: userType,
@@ -69,6 +138,7 @@ export default function OnboardingCreateEvent() {
       search_location: null,
       radius_km: 2,
       description: "",
+      local_type_id: selectedType?.originalId || null,
     });
     setStep(2);
   };
@@ -95,6 +165,30 @@ export default function OnboardingCreateEvent() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  // Save local data to backend when event name and description are entered
+  const saveLocalData = async () => {
+    // Only save if we have both name and local_type_id
+    if (!formData.event_name.trim() || !formData.local_type_id) {
+      return;
+    }
+
+    try {
+      const localPayload = {
+        name: formData.event_name.trim(),
+        description: formData.description.trim() || "",
+        local_type_id: formData.local_type_id,
+        user_id: user?.id,
+      };
+
+      await Api.post("/locals", localPayload);
+      console.log("Local data saved successfully");
+    } catch (error) {
+      console.error("Error saving local data:", error);
+      // Don't show error to user as this is a background save
+      // The main event creation will still work
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -166,7 +260,7 @@ export default function OnboardingCreateEvent() {
     };
 
     await Api.post("/events", payload)
-      .then((response) => {
+      .then(() => {
         markEventAsCreated();
         confetti({
           particleCount: 50,
@@ -186,36 +280,6 @@ export default function OnboardingCreateEvent() {
       });
   };
 
-  const userTypes = [
-    {
-      id: "event_planner",
-      title: "Event Planner",
-      description:
-        "Event planner, looking for venues, supporting ecosystems, and neighborhood dynamics.",
-      icon: "🎯",
-    },
-    {
-      id: "newcomer",
-      title: "Newcomer",
-      description:
-        "New at city, looking for hotels, places to stay, know your local shops and more.",
-      icon: "🆕",
-    },
-    {
-      id: "tourist",
-      title: "Tourist",
-      description: "Easy navigation + Authentic Experiences = Sounds Cool",
-      icon: "🧳",
-    },
-    {
-      icon: "🏠",
-      id: "local",
-      title: "Local",
-      description:
-        "Discover hidden gems + know your neighbourhood + local updates",
-    },
-  ];
-
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl w-full">
@@ -229,34 +293,48 @@ export default function OnboardingCreateEvent() {
             <div className="mt-4 flex items-center justify-between">
               <p className="text-3xl">Let's create your first local</p>
             </div>
-            <div className="mt-8 mb-12">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {userTypes.map((userType) => (
-                  <button
-                    key={userType.id}
-                    onClick={() => handleUserTypeSelect(userType.id)}
-                    className={`h-full p-6 text-left border border-gray-300 hover:bg-lochmara-50 hover:border-lochmara-300 rounded-xl shadow-xs hover:shadow cursor-pointer flex flex-col group`}
-                  >
-                    <div className="mb-8 flex flex-1 flex-col">
-                      <div className="text-4xl mb-4 ">{userType.icon}</div>
-                      <h3 className="text-xl font-semibold group-hover:text-lochmara-600">
-                        {userType.title}
-                      </h3>
-                      <p className="mt-4 text-sm leading-relaxed flex-grow text-gray-500 group-hover:text-gray-700">
-                        {userType.description}
-                      </p>
-                    </div>
-                    <div className="mt-auto flex items-center justify-between">
-                      <p className="text-sm text-gray-400 invisible group-hover:visible">
-                        Click to select
-                      </p>
-                      <div className="p-2 text-sm group-hover:bg-lochmara-200 rounded-full flex items-center gap-2">
-                        <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-lochmara-600" />
-                      </div>
-                    </div>
-                  </button>
-                ))}
+            
+            {/* Error Display for User Types */}
+            {userTypesError && (
+              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700">{userTypesError}</p>
               </div>
+            )}
+            
+            <div className="mt-8 mb-12">
+              {userTypes.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  {userTypes.map((userType) => (
+                    <button
+                      key={userType.id}
+                      onClick={() => handleUserTypeSelect(userType.id)}
+                      className={`h-full p-6 text-left border border-gray-300 hover:bg-lochmara-50 hover:border-lochmara-300 rounded-xl shadow-xs hover:shadow cursor-pointer flex flex-col group`}
+                    >
+                      <div className="mb-8 flex flex-1 flex-col">
+                        <div className="text-4xl mb-4 ">{userType.icon}</div>
+                        <h3 className="text-xl font-semibold group-hover:text-lochmara-600">
+                          {userType.title}
+                        </h3>
+                        <p className="mt-4 text-sm leading-relaxed flex-grow text-gray-500 group-hover:text-gray-700">
+                          {userType.short_description}
+                        </p>
+                      </div>
+                      <div className="mt-auto flex items-center justify-between">
+                        <p className="text-sm text-gray-400 invisible group-hover:visible">
+                          Click to select
+                        </p>
+                        <div className="p-2 text-sm group-hover:bg-lochmara-200 rounded-full flex items-center gap-2">
+                          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-lochmara-600" />
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-gray-500">No user types available. Please refresh the page.</p>
+                </div>
+              )}
             </div>
           </Fragment>
         )}
@@ -337,7 +415,11 @@ export default function OnboardingCreateEvent() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => setStep(3)}
+                      onClick={async () => {
+                        // Save local data before moving to next step
+                        await saveLocalData();
+                        setStep(3);
+                      }}
                       disabled={!formData.event_name.trim()}
                       className="pl-4 pr-3 py-2 font-semibold text-sm text-gray-700 hover:text-gray-900 bg-gray-50 hover:bg-gray-200 border border-gray-200 rounded-lg cursor-pointer flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -460,10 +542,6 @@ export default function OnboardingCreateEvent() {
               <div className="w-1/2">
                 {/* Map Section */}
                 <div className="h-96 rounded-lg overflow-hidden">
-                  {console.log(
-                    "Step 4 - Location coordinates:",
-                    formData.location_coordinates
-                  )}
                   <GoogleMap
                     key={`map-${formData.location_coordinates?.lat}-${formData.location_coordinates?.lng}`}
                     onLocationSelect={handleLocationSelect}
