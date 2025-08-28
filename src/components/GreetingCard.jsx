@@ -1,12 +1,10 @@
 import React from "react";
 import { MessageCircle } from "lucide-react";
 
-const GreetingCard = ({ greetingData }) => {
-  if (!greetingData) return null;
+const GreetingCard = ({ data }) => {
+  if (!data) return null;
 
-  const { greeting } = greetingData;
-
-  if (!greeting) {
+  if (!data) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-2">
         <div className="flex items-center gap-2">
@@ -27,11 +25,8 @@ const GreetingCard = ({ greetingData }) => {
       <div className="text-center">
         <div className="bg-white rounded-xl p-6 shadow-md border-2 border-green-200">
           <p className="text-3xl font-bold text-green-700 mb-2">
-            {greeting}
+            {data}
           </p>
-          <div className="text-sm text-green-600">
-            ✨ Greeting function executed successfully
-          </div>
         </div>
       </div>
     </div>

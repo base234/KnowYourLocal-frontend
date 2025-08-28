@@ -1,0 +1,263 @@
+/* Chat Component Animations - Minimal Version with Brand Colors */
+@keyframes slide-in-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grow-dot-1 {
+  0%, 100% {
+    transform: scale(0.3);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes grow-dot-2 {
+  0%, 100% {
+    transform: scale(0.3);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes grow-dot-3 {
+  0%, 100% {
+    transform: scale(0.3);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animation utility classes */
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-right-4 {
+  animation: slide-in-from-right 0.4s ease-out;
+}
+
+.slide-in-from-left-4 {
+  animation: slide-in-from-left 0.4s ease-out;
+}
+
+.zoom-in-95 {
+  animation: zoom-in 0.3s ease-out;
+}
+
+.fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.5s ease-out;
+}
+
+.animate-grow-dot-1 {
+  animation: grow-dot-1 1.4s infinite;
+}
+
+.animate-grow-dot-2 {
+  animation: grow-dot-2 1.4s infinite;
+  animation-delay: 0.2s;
+}
+
+.animate-grow-dot-3 {
+  animation: grow-dot-3 1.4s infinite;
+  animation-delay: 0.4s;
+}
+
+/* Smooth transitions for interactive elements */
+.message-bubble {
+  transition: all 0.2s ease-out;
+}
+
+/* Loading animation for the thinking state */
+.thinking-dots {
+  animation: thinking 1.4s infinite;
+}
+
+@keyframes thinking {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Smooth scroll behavior */
+.messages-container {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: rgba(55, 130, 62, 0.3);
+  border-radius: 3px;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(55, 130, 62, 0.5);
+}
+
+/* Input focus animations */
+.input-field:focus {
+  /* Removed scale transform */
+}
+
+/* Button hover effects */
+.send-button {
+  transition: all 0.2s ease-out;
+}
+
+/* Message entrance animations */
+.message-enter {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease-out;
+}
+
+.message-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tool result animations */
+.tool-result {
+  animation: tool-result-enter 0.4s ease-out;
+}
+
+@keyframes tool-result-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Welcome message animation */
+.welcome-message {
+  animation: welcome-fade-in 0.6s ease-out;
+}
+
+@keyframes welcome-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .messages-container {
+    padding: 1rem;
+  }
+
+  .message-bubble {
+    max-width: 90%;
+  }
+
+  .input-field {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Focus states */
+.input-field:focus {
+  transform: scale(1.005);
+  box-shadow: 0 0 0 3px rgba(236, 72, 141, 0.1);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: all 0.2s ease-out;
+}
+
+/* Shimmer animation for AI thinking text */
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Custom selection color */
+::selection {
+  background: rgba(55, 130, 62, 0.2);
+  color: #234427;
+}
+
+::-moz-selection {
+  background: rgba(55, 130, 62, 0.2);
+  color: #234427;
+}
