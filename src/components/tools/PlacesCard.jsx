@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import SmartModal from '../SmartModal';
+import React, { Fragment, useState } from "react";
+import SmartModal from "../SmartModal";
+import { ArrowRight } from "lucide-react";
 
 // CSS Styles for PlacesCard component
 const styles = `
@@ -279,8 +280,8 @@ const styles = `
 `;
 
 // Inject styles into the document
-if (typeof document !== 'undefined') {
-  const styleSheet = document.createElement('style');
+if (typeof document !== "undefined") {
+  const styleSheet = document.createElement("style");
   styleSheet.textContent = styles;
   document.head.appendChild(styleSheet);
 }
@@ -318,14 +319,14 @@ const PlacesCard = ({ placesData }) => {
       const { prefix, suffix } = categories[0].icon;
       return `${prefix}32${suffix}`;
     }
-    return 'https://ss3.4sqi.net/img/categories_v2/building/default_32.png';
+    return "https://ss3.4sqi.net/img/categories_v2/building/default_32.png";
   };
 
   const getCategoryName = (categories) => {
     if (categories && categories.length > 0) {
       return categories[0].short_name || categories[0].name;
     }
-    return 'Place';
+    return "Place";
   };
 
   const PlaceCard = ({ place }) => (
@@ -337,11 +338,11 @@ const PlacesCard = ({ placesData }) => {
             alt={getCategoryName(place.categories)}
             className="category-icon"
           />
-          <span className="category-name">{getCategoryName(place.categories)}</span>
+          <span className="category-name">
+            {getCategoryName(place.categories)}
+          </span>
         </div>
-        <div className="place-distance">
-          {formatDistance(place.distance)}
-        </div>
+        <div className="place-distance">{formatDistance(place.distance)}</div>
       </div>
 
       <div className="place-card-content">
@@ -376,27 +377,26 @@ const PlacesCard = ({ placesData }) => {
   );
 
   return (
-    <div className="places-card-container">
-      <div className="places-header">
-        <h2 className="places-title">Nearby Places</h2>
-        <p className="places-subtitle">Found {results.length} places in your area</p>
-      </div>
+    <Fragment>
+      <hr className="my-4 border-t border-gray-300 border-dashed" />
+      <h2 className="font-semibold">
+        Nearby Places ({results.length} places found)
+      </h2>
 
-      <div className="places-carousel">
+      <div className="mt-4 flex items-start gap-4">
         {initialPlaces.map((place) => (
           <PlaceCard key={place.fsq_place_id} place={place} />
         ))}
       </div>
 
       {hasMorePlaces && (
-        <div className="places-show-more">
-          <button
-            onClick={openModal}
-            className="show-more-btn"
-          >
-            Show {remainingPlaces.length} More Places
-          </button>
-        </div>
+        <button
+          onClick={openModal}
+          className="mt-6 font-semibold text-lochmara-400 underline underline-offset-4 decoration-lochmara-200 hover:decoration-lochmara-500 rounded-md cursor-pointer flex items-center space-x-2 group"
+        >
+          <span>Show {remainingPlaces.length} more places</span>{" "}
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+        </button>
       )}
 
       <SmartModal
@@ -404,7 +404,7 @@ const PlacesCard = ({ placesData }) => {
         onClose={closeModal}
         header={`All Places (${results.length} total)`}
         size="4xl"
-        animationType='scale'
+        animationType="scale"
         scrollable={true}
         centered={true}
       >
@@ -414,7 +414,7 @@ const PlacesCard = ({ placesData }) => {
           ))}
         </div>
       </SmartModal>
-    </div>
+    </Fragment>
   );
 };
 
