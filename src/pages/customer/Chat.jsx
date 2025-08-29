@@ -1,17 +1,11 @@
 import React, { useState, useRef, useEffect, Fragment } from "react";
-import {
-  Send,
-  Bot,
-  User,
-  Sparkles,
-  MessageCircle,
-  ArrowUp,
-  Loader2,
-} from "lucide-react";
-import PokemonCard from "@/components/PokemonCard";
-import GreetingCard from "@/components/GreetingCard";
+import { Bot, Sparkles, ArrowUp, Loader2, ChevronRight } from "lucide-react";
+import PokemonCard from "@/components/tools/PokemonCard";
+import GreetingCard from "@/components/tools/GreetingCard";
+import PlacesCard from "@/components/PlacesCard";
 import Api from "@/api/api";
 import "@/components/Chat.css";
+import AiThinkingLoader from "@/components/AiThinkingLoader";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -75,7 +69,7 @@ const Chat = () => {
       });
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyUp = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
@@ -85,47 +79,8 @@ const Chat = () => {
   const handleInputChange = (e) => {
     setInput(e.target.value);
     // Auto-resize textarea
-    const rows = Math.min(Math.max(e.target.value.split("\n").length, 1), 4);
+    const rows = Math.min(Math.max(e.target.value.split("\n").length, 1), 10);
     setInputRows(rows);
-  };
-
-  const renderFunctionResult = (functionName, result) => {
-    switch (functionName) {
-      case "greet_hello_world":
-        return <GreetingCard greetingData={result} />;
-
-      case "get_pokemon_info":
-        return (
-          <div>
-            <PokemonCard pokemonData={result} />;<p>Hello World</p>
-          </div>
-        );
-
-      default:
-        return (
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-2 prose">
-            <div className="text-sm">{JSON.stringify(result, null, 2)}</div>
-          </div>
-        );
-    }
-  };
-
-  // Helper function to check if a message contains Pokemon tool call results
-  const hasPokemonToolCall = (message) => {
-    return message.functionResults?.some(
-      (result) => result.function_name === "get_pokemon_info"
-    );
-  };
-
-  // Helper function to format Pokemon response content
-  const formatPokemonResponse = (content, hasToolCall) => {
-    if (!hasToolCall) return content;
-
-    // If there's a Pokemon tool call, format the response nicely
-    return content.replace(
-      /Pikachu is a well-known Pokémon/,
-      "Here's what I found about Pikachu! 🎉"
-    );
   };
 
   const getConnectionStatusColor = () => {
@@ -160,22 +115,23 @@ const Chat = () => {
       <div className="bg-white border-b border-gray-200 px-6 py-2">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gray-800 text-white">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  AI Assistant
-                </h1>
-                <p className="text-sm text-gray-600">
-                  Powered by advanced tool calling
-                </p>
+            <div className="flex flex-col gap-2">
+              <div className="text-sm flex items-center space-x-2">
+                <span>🏠 Local</span>
+                <span>
+                  <ChevronRight className="w-2 h-2" />
+                </span>
+                <span
+                  className="text-gray-700"
+                  title="Looking for a Paying Guest around Bangalore for cheapest room"
+                >
+                  Looking for a Paying Guest around Bangalore fo...
+                </span>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-full border border-gray-200">
+              <div className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full border border-gray-200">
                 <div
                   className={`w-2 h-2 rounded-full ${getConnectionStatusColor()}`}
                 ></div>
@@ -235,7 +191,7 @@ const Chat = () => {
 
               {message.role === "assistant" && (
                 <div className="flex items-start gap-3 group">
-                  <div className="p-2 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center">
+                  <div className="p-2 border border-gray-200 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center">
                     <Bot className="w-6 h-6" />
                   </div>
 
@@ -275,6 +231,12 @@ const Chat = () => {
                                           data={conversation.content}
                                         />
                                       )}
+                                      {conversation.tool_name ===
+                                        "search_places" && (
+                                        <PlacesCard
+                                          placesData={JSON.parse(conversation.content).data}
+                                        />
+                                      )}
                                     </div>
                                   )}
                                 </Fragment>
@@ -289,39 +251,7 @@ const Chat = () => {
             </Fragment>
           ))}
 
-          {isLoading && (
-            <div className="flex items-center gap-3 animate-in slide-in-from-left-4 duration-500">
-              <div className="p-2 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center">
-                <Bot className="w-6 h-6" />
-              </div>
-
-              <div className="">
-                <div className="flex items-center gap-4">
-                  <div className="relative overflow-hidden">
-                    <span className="text-sm text-gray-500 relative z-10">
-                      AI is thinking
-                    </span>
-                    <div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12 animate-shimmer"
-                      style={{
-                        background:
-                          "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
-                        animation: "shimmer 2s infinite",
-                        transform: "skewX(-12deg)",
-                        width: "200%",
-                        left: "-100%",
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-razzmatazz-500 rounded-full animate-grow-dot-1"></div>
-                    <div className="w-2 h-2 bg-razzmatazz-500 rounded-full animate-grow-dot-2"></div>
-                    <div className="w-2 h-2 bg-razzmatazz-500 rounded-full animate-grow-dot-3"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {isLoading && <AiThinkingLoader />}
 
           <div ref={messagesEndRef} />
         </div>
@@ -334,9 +264,9 @@ const Chat = () => {
             ref={inputRef}
             value={input}
             onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
-            className="w-full text-sm border-2 border-gray-200 rounded-2xl px-6 py-4 pr-16 resize-none focus:outline-none focus:border-razzmatazz-400 focus:ring-2 focus:ring-razzmatazz-100 text-gray-800 placeholder-gray-400 input-field bg-white/90 backdrop-blur-sm shadow-lg"
+            onKeyUp={handleKeyUp}
+            placeholder="Type your message here..."
+            className="w-full text-sm border-2 border-gray-200 rounded-xl px-6 py-4 pr-16 resize-none focus:outline-none focus:border-razzmatazz-400 focus:ring-2 focus:ring-razzmatazz-100 text-gray-800 placeholder-gray-400 input-field bg-white/80 backdrop-blur-sm shadow-lg"
             rows={inputRows}
             disabled={isLoading}
           />
@@ -344,7 +274,7 @@ const Chat = () => {
           <button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            className="absolute right-3 bottom-3 p-2 rounded-xl bg-razzmatazz-600 text-white hover:bg-razzmatazz-700 disabled:bg-gray-300 disabled:cursor-not-allowed send-button"
+            className="absolute right-3 bottom-3 p-2 rounded-lg bg-razzmatazz-600 text-white hover:bg-razzmatazz-700 disabled:bg-gray-300 disabled:cursor-not-allowed send-button cursor-pointer"
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
