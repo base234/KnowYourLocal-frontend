@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SmartModal from './SmartModal';
+import SmartModal from '../SmartModal';
 
 // CSS Styles for PlacesCard component
 const styles = `

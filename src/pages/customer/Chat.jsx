@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, Fragment } from "react";
 import { Bot, Sparkles, ArrowUp, Loader2, ChevronRight } from "lucide-react";
 import PokemonCard from "@/components/tools/PokemonCard";
 import GreetingCard from "@/components/tools/GreetingCard";
-import PlacesCard from "@/components/PlacesCard";
+import PlacesCard from "@/components/tools/PlacesCard";
 import Api from "@/api/api";
 import "@/components/Chat.css";
 import AiThinkingLoader from "@/components/AiThinkingLoader";
