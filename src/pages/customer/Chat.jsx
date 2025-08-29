@@ -17,11 +17,33 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(scrollToBottom, [messages]);
+
+  // Focus input on page load
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+
+
+  // Focus input when responses complete (when isLoading changes from true to false)
+  useEffect(() => {
+    if (!isLoading && inputRef.current) {
+      // Small delay to ensure the response is fully rendered
+      setTimeout(() => {
+        inputRef.current.focus();
+      }, 100);
+    }
+  }, [isLoading]);
+
+
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
