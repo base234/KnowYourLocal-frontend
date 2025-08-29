@@ -12,9 +12,10 @@ import {
 import confetti from "canvas-confetti";
 
 export default function OnboardingCreateEvent() {
+  const { user, markEventAsCreated } = useAuth();
+
   const [formData, setFormData] = useState({
-    event_name: "",
-    event_type: "",
+    local_name: "",
     location: "",
     location_coordinates: null,
     search_location: null, // Add search location field
@@ -27,75 +28,35 @@ export default function OnboardingCreateEvent() {
   const [error, setError] = useState("");
   const [selectedUserType, setSelectedUserType] = useState("");
   const [step, setStep] = useState(1);
-  const [userTypes, setUserTypes] = useState([]);
-  const [isUserTypesLoading, setIsUserTypesLoading] = useState(true);
-  const [userTypesError, setUserTypesError] = useState("");
+  const [localTypes, setLocalTypes] = useState([]);
+  const [isLocalTypesLoading, setIsLocalTypesLoading] = useState(true);
+  const [localTypesError, setLocalTypesError] = useState("");
+  const [localData, setLocalData] = useState({});
 
-  const { user, markEventAsCreated } = useAuth();
   const navigate = useNavigate();
 
-  // Fetch user types from API
+  // Fetch local types from API
   useEffect(() => {
-    const fetchUserTypes = async () => {
-      try {
-        setIsUserTypesLoading(true);
-        setUserTypesError("");
-        const response = await Api.get("/local-types");
-        
-        // Transform the API response to match the expected format
-        const transformedUserTypes = response.data.map((type) => ({
-          id: type.name.toLowerCase().replace(/\s+/g, "_"),
-          title: type.name,
-          description: type.description,
-          short_description: type.short_description,
-          icon: type.icon,
-          uuid: type.uuid,
-          originalId: type.id
-        }));
-        
-        setUserTypes(transformedUserTypes);
-      } catch (error) {
-        console.error("Error fetching local types:", error);
-        setUserTypesError("Failed to load local types. Please refresh the page.");
-        
-        // Fallback to static user types if API fails
-        const fallbackUserTypes = [
-          {
-            id: "event_planner",
-            title: "Event Planner",
-            description:
-              "Event planner, looking for venues, supporting ecosystems, and neighborhood dynamics.",
-            icon: "🎯",
-          },
-          {
-            id: "newcomer",
-            title: "Newcomer",
-            description:
-              "New at city, looking for hotels, places to stay, know your local shops and more.",
-            icon: "🆕",
-          },
-          {
-            id: "tourist",
-            title: "Tourist",
-            description: "Easy navigation + Authentic Experiences = Sounds Cool",
-            icon: "🧳",
-          },
-          {
-            icon: "🏠",
-            id: "local",
-            title: "Local",
-            description:
-              "Discover hidden gems + know your neighbourhood + local updates",
-          },
-        ];
-        setUserTypes(fallbackUserTypes);
-      } finally {
-        setIsUserTypesLoading(false);
-      }
-    };
-
-    fetchUserTypes();
+    fetchLocalTypes();
   }, []);
+
+  const fetchLocalTypes = () => {
+    setIsLocalTypesLoading(true);
+    setLocalTypesError("");
+
+    Api.get("/local-types")
+      .then((response) => {
+        setLocalTypes(response.data.data);
+        setIsLocalTypesLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching local types:", error);
+        setLocalTypesError(
+          "Failed to load local types. Please refresh the page."
+        );
+        setIsLocalTypesLoading(false);
+      });
+  };
 
   // Prevent access if user already has an event created or doesn't have customer role
   useEffect(() => {
@@ -106,8 +67,8 @@ export default function OnboardingCreateEvent() {
     }
   }, [user, navigate]);
 
-  // Show loading while checking user status or fetching user types
-  if (!user || isUserTypesLoading) {
+  // Show loading while checking user status or fetching local types
+  if (!user || isLocalTypesLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -126,19 +87,18 @@ export default function OnboardingCreateEvent() {
   const handleUserTypeSelect = (userType) => {
     // Reset all form data when user type changes
     setSelectedUserType(userType);
-    
-    // Find the selected user type to get the originalId for API calls
-    const selectedType = userTypes.find(type => type.id === userType);
-    
+
+    // Find the selected user type to get the id for API calls
+    const selectedType = localTypes.find((type) => type.id === userType);
+
     setFormData({
-      event_name: "",
-      event_type: userType,
+      local_name: "",
       location: "",
       location_coordinates: null,
       search_location: null,
       radius_km: 2,
       description: "",
-      local_type_id: selectedType?.originalId || null,
+      local_type_id: selectedType?.id || null,
     });
     setStep(2);
   };
@@ -149,7 +109,7 @@ export default function OnboardingCreateEvent() {
       ...prev,
       location: locationData.address,
       location_coordinates: locationData.coordinates,
-      search_location: locationData.searchLocation || null, // Capture search location if available
+      search_location: locationData.searchLocation || null,
       radius_km: locationData.radius,
     }));
     setShowSmartModal(false);
@@ -167,45 +127,15 @@ export default function OnboardingCreateEvent() {
     }));
   };
 
-  // Save local data to backend when event name and description are entered
-  const saveLocalData = async () => {
-    // Only save if we have both name and local_type_id
-    if (!formData.event_name.trim() || !formData.local_type_id) {
-      return;
-    }
-
-    try {
-      const onboardingPayload = {
-        data: {
-          local: {
-            name: formData.event_name.trim(),
-            description: formData.description.trim() || "",
-            user_id: user?.id,
-            local_type_id: formData.local_type_id,
-          }
-        }
-      };
-
-      await Api.post("/onboarding", onboardingPayload);
-      console.log("Onboarding data saved successfully");
-    } catch (error) {
-      console.error("Error saving onboarding data:", error);
-      // Don't show error to user as this is a background save
-      // The main event creation will still work
-    }
-  };
-
   const handleSubmit = async (e) => {
-    // If called from form submission, prevent default
     if (e && e.preventDefault) {
       e.preventDefault();
     }
 
     setError("");
 
-    // Validate required fields
-    if (!formData.event_name.trim()) {
-      setError("Event name is required");
+    if (!formData.local_name.trim()) {
+      setError("Local name is required");
       return;
     }
 
@@ -214,7 +144,6 @@ export default function OnboardingCreateEvent() {
       return;
     }
 
-    // Validate coordinates
     if (
       typeof formData.location_coordinates.lat !== "number" ||
       typeof formData.location_coordinates.lng !== "number"
@@ -239,7 +168,6 @@ export default function OnboardingCreateEvent() {
       return;
     }
 
-    // Validate radius
     if (
       typeof formData.radius_km !== "number" ||
       formData.radius_km < 1 ||
@@ -253,26 +181,30 @@ export default function OnboardingCreateEvent() {
 
     const payload = {
       data: {
-        event_name: formData.event_name.trim(),
-        event_type: formData.event_type.trim(),
-        location: formData.location.trim(),
-        location_coordinates: formData.location_coordinates,
-        search_location: formData.search_location,
-        radius_km: formData.radius_km,
+        local_type_id: formData.local_type_id,
+        local_name: formData.local_name.trim(),
         description: formData.description.trim(),
+        co_ordinates: formData.location_coordinates,
+        location_search_query: formData.search_location,
+        radius: formData.radius_km,
       },
     };
 
-    await Api.post("/events", payload)
-      .then(() => {
-        markEventAsCreated();
+    await Api.post("/onboarding/create-local", payload)
+      .then((response) => {
+
         confetti({
-          particleCount: 50,
+          particleCount: 100,
           spread: 70,
-          origin: { y: 1.1 },
+          origin: { y: 0.6 },
           startVelocity: 80,
+          gravity: 0.8,
+          ticks: 200,
         });
-        // navigate("/dashboard");
+
+        setLocalData(response.data.data);
+        setStep(5);
+        setIsLoading(false);
       })
       .catch((error) => {
         setError(
@@ -284,43 +216,49 @@ export default function OnboardingCreateEvent() {
       });
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl w-full">
-        <h1 className="font-bold text-4xl tracking-tight">
-          Hello {user?.first_name}
-        </h1>
+  const handleGoToLocal = () => {
+    navigate("/locals/");
+  };
 
+  return (
+    <div className="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl w-full">
         {/* User Type Selection */}
         {step === 1 && (
           <Fragment>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-3xl">Let's create your first local</p>
-            </div>
-            
+            <h1 className="font-bold text-4xl tracking-tight">
+              Hello {user?.first_name}
+            </h1>
+            <p className="mt-3 text-3xl">Let's create your first local</p>
+
             {/* Error Display for User Types */}
-            {userTypesError && (
+            {localTypesError && (
               <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-700">{userTypesError}</p>
+                <p className="text-sm text-red-700">{localTypesError}</p>
               </div>
             )}
-            
+
             <div className="mt-8 mb-12">
-              {userTypes.length > 0 ? (
+              {isLocalTypesLoading ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fern-600 mx-auto"></div>
+                  <p className="mt-4 text-gray-600">Loading local types...</p>
+                </div>
+              ) : localTypes.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  {userTypes.map((userType) => (
+                  {localTypes.map((localType) => (
                     <button
-                      key={userType.id}
-                      onClick={() => handleUserTypeSelect(userType.id)}
+                      key={localType.id}
+                      onClick={() => handleUserTypeSelect(localType.id)}
                       className={`h-full p-6 text-left border border-gray-300 hover:bg-lochmara-50 hover:border-lochmara-300 rounded-xl shadow-xs hover:shadow cursor-pointer flex flex-col group`}
                     >
                       <div className="mb-8 flex flex-1 flex-col">
-                        <div className="text-4xl mb-4 ">{userType.icon}</div>
+                        <div className="text-4xl mb-4 ">{localType.icon}</div>
                         <h3 className="text-xl font-semibold group-hover:text-lochmara-600">
-                          {userType.title}
+                          {localType.name}
                         </h3>
                         <p className="mt-4 text-sm leading-relaxed flex-grow text-gray-500 group-hover:text-gray-700">
-                          {userType.short_description}
+                          {localType.short_description}
                         </p>
                       </div>
                       <div className="mt-auto flex items-center justify-between">
@@ -336,7 +274,9 @@ export default function OnboardingCreateEvent() {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No user types available. Please refresh the page.</p>
+                  <p className="text-gray-500">
+                    No local types available. Please refresh the page.
+                  </p>
                 </div>
               )}
             </div>
@@ -345,22 +285,23 @@ export default function OnboardingCreateEvent() {
 
         {step === 2 && (
           <Fragment>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-3xl">Tell us about your event</p>
-            </div>
+            <p className="mt-3 text-3xl">
+              <strong>{user?.first_name}</strong>, tell us about your local
+            </p>
 
             <div className="mt-8 mb-12 flex items-start gap-10">
               {/* Left Side - Selected Event Details */}
               <div className="w-1/2 space-y-4">
                 <h2 className="text-4xl">
-                  {userTypes.find((type) => type.id === formData.event_type)
+                  {localTypes.find((type) => type.id === formData.local_type_id)
                     ?.icon || "🎯"}
                 </h2>
                 <h2 className="text-2xl font-semibold capitalize">
-                  {formData.event_type.replace("_", " ")}
+                  {localTypes.find((type) => type.id === formData.local_type_id)
+                    ?.name || "Local Type"}
                 </h2>
-                <p className="text-sm text-gray-700">
-                  {userTypes.find((type) => type.id === formData.event_type)
+                <p className="max-w-lg text-sm text-gray-500 leading-relaxed">
+                  {localTypes.find((type) => type.id === formData.local_type_id)
                     ?.description || ""}
                 </p>
               </div>
@@ -371,20 +312,20 @@ export default function OnboardingCreateEvent() {
                   {/* Event Name */}
                   <div>
                     <label
-                      htmlFor="event_name"
+                      htmlFor="local_name"
                       className="block text-sm font-medium text-gray-700 mb-2"
                     >
-                      Event Name <span className="text-red-500">*</span>
+                      Your Local Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      id="event_name"
-                      name="event_name"
-                      value={formData.event_name}
+                      id="local_name"
+                      name="local_name"
+                      value={formData.local_name}
                       onChange={handleInputChange}
                       required
                       className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter your event name"
+                      placeholder="Enter your local name"
                     />
                   </div>
 
@@ -394,7 +335,7 @@ export default function OnboardingCreateEvent() {
                       htmlFor="description"
                       className="block text-sm font-medium text-gray-700 mb-2"
                     >
-                      Description
+                      Your Local Description
                     </label>
                     <textarea
                       id="description"
@@ -419,12 +360,10 @@ export default function OnboardingCreateEvent() {
                     </button>
                     <button
                       type="button"
-                      onClick={async () => {
-                        // Save local data before moving to next step
-                        await saveLocalData();
+                      onClick={() => {
                         setStep(3);
                       }}
-                      disabled={!formData.event_name.trim()}
+                      disabled={!formData.local_name.trim()}
                       className="pl-4 pr-3 py-2 font-semibold text-sm text-gray-700 hover:text-gray-900 bg-gray-50 hover:bg-gray-200 border border-gray-200 rounded-lg cursor-pointer flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <span>Next</span>
@@ -439,11 +378,10 @@ export default function OnboardingCreateEvent() {
 
         {step === 3 && (
           <Fragment>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-3xl">
-                Mark your nearby location to discover and explore
-              </p>
-            </div>
+            <p className="mt-3 text-3xl">
+              <strong>{user?.first_name}</strong>, mark your nearby location to
+              discover and explore
+            </p>
             <div className="mt-8 mb-12">
               {!formData.location_coordinates ? (
                 // When no location is selected, show event details on left and location selection on right
@@ -451,16 +389,18 @@ export default function OnboardingCreateEvent() {
                   {/* Left Side - Event Details */}
                   <div className="w-1/2">
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-500 capitalize">
-                        {userTypes.find(
-                          (type) => type.id === formData.event_type
+                      <span className="text-sm text-gray-500">
+                        {localTypes.find(
+                          (type) => type.id === formData.local_type_id
                         )?.icon || "🎯"}
                         &nbsp;&nbsp;
-                        {formData.event_type.replace("_", " ")}
+                        {localTypes.find(
+                          (type) => type.id === formData.local_type_id
+                        )?.name || "Local Type"}
                       </span>
                       <ChevronRight className="w-4 h-4 text-gray-400" />
                       <span className="text-sm text-gray-700">
-                        {formData.event_name}
+                        {formData.local_name}
                       </span>
                     </div>
                     {formData.description && (
@@ -490,24 +430,26 @@ export default function OnboardingCreateEvent() {
                   readOnly={false}
                   eventDetails={{
                     icon:
-                      userTypes.find((type) => type.id === formData.event_type)
-                        ?.icon || "🎯",
-                    type: formData.event_type.replace("_", " "),
-                    name: formData.event_name,
+                      localTypes.find(
+                        (type) => type.id === formData.local_type_id
+                      )?.icon || "🎯",
+                    type:
+                      localTypes.find(
+                        (type) => type.id === formData.local_type_id
+                      )?.name || "Local Type",
+                    name: formData.local_name,
                     description: formData.description,
                   }}
                   onLoadingChange={handleLocationLoadingChange}
                 />
               )}
             </div>
-
             {/* Error Display */}
             {error && (
               <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-700">{error}</p>
               </div>
             )}
-
             {/* Navigation buttons */}
             <div className="mt-6 flex items-center justify-between">
               <button
@@ -538,10 +480,9 @@ export default function OnboardingCreateEvent() {
               </div>
             )}
 
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-3xl">Review & Create Your Event</p>
-            </div>
-
+            <p className="mt-3 text-3xl">
+              <strong>{user?.first_name}</strong>, review & create your local
+            </p>
             <div className="mt-8 mb-12 flex gap-10">
               <div className="w-1/2">
                 {/* Map Section */}
@@ -561,12 +502,18 @@ export default function OnboardingCreateEvent() {
                 <div className="space-y-4">
                   <div className="text-sm flex justify-between">
                     <p className="text-gray-500">Name:</p>
-                    <p className="text-gray-700">{formData.event_name}</p>
+                    <p className="text-gray-700">{formData.local_name}</p>
                   </div>
                   <div className="text-sm flex justify-between">
                     <p className="text-gray-500">Type:</p>
-                    <p className="text-gray-700 capitalize">
-                      {formData.event_type.replace("_", " ")}
+                    <p className="text-gray-700">
+                      {localTypes.find(
+                        (type) => type.id === formData.local_type_id
+                      )?.icon || "🎯"}
+                      &nbsp;&nbsp;
+                      {localTypes.find(
+                        (type) => type.id === formData.local_type_id
+                      )?.name || "Local Type"}
                     </p>
                   </div>
                   {formData.description && (
@@ -634,6 +581,170 @@ export default function OnboardingCreateEvent() {
                   <span>Create Event</span>
                 )}
               </button>
+            </div>
+          </Fragment>
+        )}
+
+        {step === 5 && (
+          <Fragment>
+            <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl w-full">
+                <div className="text-center mb-12">
+                  <div className="text-4xl mb-6">🎉</div>
+
+                  <h1 className="text-xl md:text-3xl font-bold">
+                    Congratulations{" "}
+                    <span className="bg-gradient-to-r from-fern-600 to-lochmara-600 bg-clip-text text-transparent">
+                      {user?.first_name}!
+                    </span>
+                  </h1>
+
+                  <p className="mt-2 text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    You've just taken the first step in creating something truly
+                    special.
+                  </p>
+                </div>
+
+                {/* Achievement Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  <div className="p-0.5 border border-fern-200 rounded-xl h-full">
+                    <div className="bg-gradient-to-br from-white to-fern-100 px-2 py-6 rounded-lg text-center h-full flex flex-col justify-center">
+                      <div className="text-3xl mb-3">✨</div>
+                      <h3 className="font-semibold text-fern-800 mb-2">
+                        Created Your Local
+                      </h3>
+                      <p className="text-sm text-fern-600">
+                        A unique space that reflects your vision
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-0.5 border border-lochmara-200 rounded-xl h-full">
+                    <div className="bg-gradient-to-br from-white to-lochmara-100 px-2 py-6 rounded-lg text-center h-full flex flex-col justify-center">
+                      <div className="text-3xl mb-3">📍</div>
+                      <h3 className="font-semibold text-lochmara-800 mb-2">
+                        Set Your Location
+                      </h3>
+                      <p className="text-sm text-lochmara-600">
+                        Marked the perfect spot for your community
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-0.5 border border-razzmatazz-200 rounded-xl h-full">
+                    <div className="bg-gradient-to-br from-white to-razzmatazz-100 px-2 py-6 rounded-lg text-center h-full flex flex-col justify-center">
+                      <div className="text-3xl mb-3">🎯</div>
+                      <h3 className="font-semibold text-razzmatazz-800 mb-2">
+                        Defined Your Purpose
+                      </h3>
+                      <p className="text-sm text-razzmatazz-600">
+                        Chosen the type that matches your passion
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-0.5 border border-gray-200 rounded-xl h-full">
+                    <div className="bg-gradient-to-br from-white to-gray-100 px-2 py-6 rounded-lg text-center h-full flex flex-col justify-center">
+                      <div className="text-3xl mb-3">🌟</div>
+                      <h3 className="font-semibold text-gray-800 mb-2">
+                        Built Your Foundation
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Laid the groundwork for meaningful connections
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* What's Next Section */}
+                <div className="p-0.5 border border-gray-200 rounded-xl">
+                  <div className="bg-gradient-to-r from-gray-50 to-white py-6 px-8 rounded-lg">
+                    <h2 className="text-lg font-medium text-gray-800 mb-6">
+                      What Happens Next?
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-fern-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm font-bold">
+                            1
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-800">
+                            Manage Your Space
+                          </h4>
+                          <p className="mt-1 text-sm text-gray-600">
+                            See who's discovering your local and manage your
+                            presence
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-lochmara-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm font-bold">
+                            2
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-800">
+                            Connect with Visitors
+                          </h4>
+                          <p className="mt-1 text-sm text-gray-600">
+                            Build your community and engage with people who
+                            discover you
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-razzmatazz-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm font-bold">
+                            3
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-800">
+                            Grow Your Local
+                          </h4>
+                          <p className="mt-1 text-sm text-gray-600">
+                            Add events, updates, and content to engage your
+                            community
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm font-bold">
+                            4
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-medium text-gray-800">
+                            Make an Impact
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            Become a hub for your neighborhood and local
+                            community
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call to Action */}
+                <div className="mt-10 text-center">
+                  <button
+                    onClick={handleGoToLocal}
+                    className="px-6 py-3 font-semibold text-white bg-gradient-to-r from-fern-500 to-lochmara-500 hover:from-fern-600 hover:to-lochmara-600 rounded-lg shadow hover:shadow-lg cursor-pointer"
+                  >
+                    Take Me to My New Local
+                  </button>
+                </div>
+              </div>
             </div>
           </Fragment>
         )}

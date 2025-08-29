@@ -477,7 +477,7 @@ const GoogleMap = ({
             {eventDetails && (
               <div className="flex items-start gap-4">
                 <div>
-                  <p className="text-sm text-gray-500 capitalize flex items-center space-x-2">
+                  <p className="text-sm text-gray-500 flex items-center space-x-2">
                     <span>
                       {eventDetails.icon || "🎯"}&nbsp;&nbsp;
                       {eventDetails.type || ""}
