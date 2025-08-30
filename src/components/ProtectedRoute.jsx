@@ -26,7 +26,7 @@ const ProtectedRoute = ({
         case "customer":
           return <Navigate to="/dashboard" replace />;
         default:
-          return <Navigate to="/login" replace />;
+          return <Navigate to="/auth/login" replace />;
       }
     }
 
@@ -53,7 +53,7 @@ const ProtectedRoute = ({
         case "customer":
           return <Navigate to="/dashboard" replace />;
         default:
-          return <Navigate to="/login" replace />;
+          return <Navigate to="/auth/login" replace />;
       }
     } else {
       return <Navigate to="/create-event" replace />;

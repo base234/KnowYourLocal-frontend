@@ -1,60 +1,124 @@
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { MapPin, TrendingUp, Users, Heart } from 'lucide-react';
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-  };
+  const stats = [
+    { name: 'Total Locals', value: '12', icon: MapPin, color: 'text-fern-600', bg: 'bg-fern-100' },
+    { name: 'This Month', value: '3', icon: TrendingUp, color: 'text-lochmara-600', bg: 'bg-lochmara-100' },
+    { name: 'Followers', value: '248', icon: Users, color: 'text-razzmatazz-600', bg: 'bg-razzmatazz-100' },
+    { name: 'Favourites', value: '67', icon: Heart, color: 'text-fern-600', bg: 'bg-fern-100' },
+  ];
+
+  const recentActivity = [
+    { id: 1, action: 'Created new local', target: 'Coffee Corner Downtown', time: '2 hours ago', color: 'bg-fern-400' },
+    { id: 2, action: 'Updated location', target: 'Pizza Palace', time: '5 hours ago', color: 'bg-lochmara-400' },
+    { id: 3, action: 'Added to favourites', target: 'Central Park Bench', time: '1 day ago', color: 'bg-razzmatazz-400' },
+    { id: 4, action: 'Shared local', target: 'Beach Volleyball Court', time: '2 days ago', color: 'bg-fern-400' },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Welcome, {user?.first_name}!
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Manage your farm and track your progress
-              </p>
+    <div className="space-y-6">
+      {/* Welcome Section */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Welcome back, {user?.first_name}!
+            </h1>
+            <p className="mt-1 text-gray-600">
+              Here's what's happening with your locals today.
+            </p>
+          </div>
+          <div className="hidden sm:block">
+            <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="w-2 h-2 bg-fern-400 rounded-full"></div>
+              <span>All systems operational</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">
-                {user?.email}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-fern-600 hover:bg-fern-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fern-500"
-              >
-                Logout
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div key={stat.name} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center">
+                <div className={`${stat.bg} p-3 rounded-lg`}>
+                  <Icon className={`w-6 h-6 ${stat.color}`} />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">{stat.name}</p>
+                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Activity */}
+        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-6 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+          </div>
+          <div className="p-6">
+            <div className="space-y-4">
+              {recentActivity.map((activity) => (
+                <div key={activity.id} className="flex items-start space-x-3">
+                  <div className={`w-3 h-3 rounded-full ${activity.color} mt-2 flex-shrink-0`}></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-gray-900">
+                      <span className="font-medium">{activity.action}</span>{' '}
+                      <span className="text-fern-600">{activity.target}</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6">
+              <button className="text-sm text-fern-600 hover:text-fern-700 font-medium">
+                View all activity →
               </button>
             </div>
           </div>
         </div>
-      </header>
 
-      {/* Main content */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 flex items-center justify-center">
-            <div className="text-center">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Dashboard</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Your dashboard content will appear here.
-              </p>
+        {/* Quick Actions */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-6 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+          </div>
+          <div className="p-6">
+            <div className="space-y-3">
+              <button className="w-full flex items-center justify-between p-3 text-left bg-fern-50 hover:bg-fern-100 rounded-lg transition-colors duration-200">
+                <div className="flex items-center">
+                  <MapPin className="w-5 h-5 text-fern-600 mr-3" />
+                  <span className="text-sm font-medium text-gray-900">Create New Local</span>
+                </div>
+              </button>
+              <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                <div className="flex items-center">
+                  <TrendingUp className="w-5 h-5 text-gray-600 mr-3" />
+                  <span className="text-sm font-medium text-gray-900">View Analytics</span>
+                </div>
+              </button>
+              <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                <div className="flex items-center">
+                  <Heart className="w-5 h-5 text-gray-600 mr-3" />
+                  <span className="text-sm font-medium text-gray-900">Manage Favourites</span>
+                </div>
+              </button>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
