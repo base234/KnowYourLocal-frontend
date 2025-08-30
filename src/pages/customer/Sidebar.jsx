@@ -11,7 +11,7 @@ import {
   TrendingUp,
   Settings
 } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logoImg from '@/assets/logo.png';
 
 const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
@@ -112,11 +112,11 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
         <div
           className={`flex items-center ${isExpanded ? "" : "justify-center"}`}
         >
-          <div className="w-9 h-9 bg-gradient-to-br from-fern-500 to-fern-600 rounded-md flex items-center justify-center p-1.5">
+          <div className="w-9 h-9 rounded-md flex items-center justify-center">
             <img
               src={logoImg}
               alt="Foursquare Logo"
-              className="w-full h-full object-contain"
+              className="w-10 h-10 object-contain"
             />
           </div>
           {isExpanded && (
@@ -135,7 +135,8 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
           isExpanded ? "py-2 px-3" : "px-2 py-2"
         }`}
       >
-        <button
+        <Link
+          to="/locals/new"
           onClick={onOpenNewLocalModal}
           className={`w-full text-center font-semibold text-sm hover:text-gray-700 bg-gradient-to-b from-white to-gray-100 hover:to-gray-200 border border-gray-300 rounded-md cursor-pointer flex items-center justify-center space-x-2 ${
             isExpanded ? "pl-1 pr-5 py-3" : "py-2.5 px-1.5"
@@ -143,7 +144,7 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
         >
           <Plus className="w-4 h-4" />
           {isExpanded && <span className="font-medium text-sm">New Local</span>}
-        </button>
+        </Link>
       </div>
 
       {/* Main Menu Items */}
@@ -156,17 +157,7 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
             return (
               <div key={item.id} className="relative">
                 <button
-                  onClick={() => !item.hasSubmenu && handleMenuClick(item)}
-                  onMouseEnter={() => {
-                    if (item.hasSubmenu) {
-                      handleSubmenuMouseEnter(item.id);
-                    }
-                  }}
-                  onMouseLeave={() => {
-                    if (item.hasSubmenu) {
-                      handleSubmenuMouseLeave();
-                    }
-                  }}
+                  onClick={() => handleMenuClick(item)}
                   className={`w-full flex items-center cursor-pointer border-r-2 ${
                     isExpanded ? "px-4 py-3" : "py-3 justify-center"
                   } ${

@@ -23,6 +23,7 @@ import Help from "@/pages/customer/Help";
 import Guide from "@/pages/customer/Guide";
 
 import OnboardingCreateLocal from "@/pages/customer/OnboardingCreateLocal";
+import NewLocal from "@/pages/customer/NewLocal";
 import Chats from "@/pages/customer/Chats";
 import MyLocal from "@/pages/customer/MyLocal";
 
@@ -80,7 +81,9 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-          <Route path="/create-local" element={<OnboardingCreateLocal />} />
+        <Route path="/create-local" element={<OnboardingCreateLocal />} />
+        <Route path="/locals/new" element={<NewLocal />} />
+        <Route path="/chats" element={<Chats />} />
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -91,7 +94,6 @@ export default function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/guide" element={<Guide />} />
         </Route>
-        <Route path="/chats" element={<Chats />} />
       </Route>
 
       {/* Catch all route */}
