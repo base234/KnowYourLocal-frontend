@@ -1,7 +1,6 @@
 import React, { useState, useRef, Fragment } from 'react';
 import {
   Home,
-  MapPin,
   Search,
   Heart,
   ChevronRight,
@@ -13,6 +12,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import logoImg from '@/assets/logo.png';
 
 const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
 
@@ -112,8 +112,12 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
         <div
           className={`flex items-center ${isExpanded ? "" : "justify-center"}`}
         >
-          <div className="w-9 h-9 bg-gradient-to-br from-fern-500 to-fern-600 rounded-md flex items-center justify-center">
-            <MapPin className="w-4 h-4 text-white" />
+          <div className="w-9 h-9 bg-gradient-to-br from-fern-500 to-fern-600 rounded-md flex items-center justify-center p-1.5">
+            <img
+              src={logoImg}
+              alt="Foursquare Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
           {isExpanded && (
             <div className="ml-2">
