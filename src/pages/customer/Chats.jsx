@@ -31,8 +31,6 @@ const Chats = () => {
     }
   }, []);
 
-
-
   // Focus input when responses complete (when isLoading changes from true to false)
   useEffect(() => {
     if (!isLoading && inputRef.current) {
@@ -310,4 +308,4 @@ const Chats = () => {
   );
 };
 
-export default Chat;
+export default Chats;

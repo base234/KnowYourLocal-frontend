@@ -28,10 +28,10 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
       path: '/dashboard'
     },
     {
-      id: 'my-locals',
+      id: 'locals',
       icon: Building2,
       label: 'My Locals',
-      path: '/my-locals'
+      path: '/locals'
     },
     {
       id: 'quick-find',
@@ -223,15 +223,15 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
 
         {/* Recent Locals */}
         {isExpanded && (
-          <div className="my-4 mx-2 w-full">
-            <h2 className="text-xs px-2 font-medium text-gray-400 uppercase tracking-wider">
+          <div className="my-4 w-full">
+            <h2 className="text-xs px-4 font-medium text-gray-400 uppercase tracking-wider">
               Recent Locals
             </h2>
             <div className="mt-2">
               {recentLocals.map((local) => (
                 <button
                   key={local.id}
-                  className="py-2 px-2 w-full text-sm text-gray-600 hover:text-gray-800 flex items-center text-left hover:bg-gray-100 cursor-pointer"
+                  className="py-2 px-4 w-full text-sm text-gray-600 hover:text-gray-800 flex items-center text-left hover:bg-gray-100 cursor-pointer"
                 >
                   <div
                     className={`w-2 h-2 rounded-full ${local.color} flex-shrink-0`}

@@ -24,6 +24,7 @@ import Guide from "@/pages/customer/Guide";
 
 import OnboardingCreateLocal from "@/pages/customer/OnboardingCreateLocal";
 import Chats from "@/pages/customer/Chats";
+import MyLocal from "@/pages/customer/MyLocal";
 
 // Error page
 import Error404 from "@/pages/Error404";
@@ -83,14 +84,14 @@ export default function App() {
           <Route path="/create-local" element={<OnboardingCreateLocal />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/my-locals" element={<MyLocals />} />
+          <Route path="/locals" element={<MyLocals />} />
+          <Route path="/locals/:local_id" element={<MyLocal />} />
           <Route path="/quick-find" element={<QuickFind />} />
           <Route path="/favourites" element={<Favourites />} />
           <Route path="/help" element={<Help />} />
           <Route path="/guide" element={<Guide />} />
-
-          <Route path="/chats" element={<Chats />} />
         </Route>
+        <Route path="/chats" element={<Chats />} />
       </Route>
 
       {/* Catch all route */}

@@ -1,19 +1,21 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { MapPin, Calendar, Heart, Share2, MoreVertical } from "lucide-react";
 import Api from "@/api/api";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 
 export default function MyLocals() {
-  const [locals, setLocals] = useState([]);
+  const { local_id } = useParams();
+
+  const [local, setLocal] = useState([]);
 
   useEffect(() => {
-    fetchLocals();
+    fetchLocal();
   }, []);
 
-  const fetchLocals = () => {
-    Api.get("/locals")
+  const fetchLocal = () => {
+    Api.get(`/locals/${local_id}`)
       .then((response) => {
-        setLocals(response.data.data);
+        setLocal(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -22,17 +24,17 @@ export default function MyLocals() {
 
   return (
     <Fragment>
-      <h1 className="text-2xl font-bold">My Locals</h1>
+      <h1 className="text-2xl font-bold">{local.name}</h1>
 
-      {locals.length === 0 && (
+      {local.length === 0 && (
         <div className="w-full p-4 border border-gray-200">
           Create your first local
         </div>
       )}
 
-      {locals.length > 0 && (
+      {local.length > 0 && (
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {locals.map((local) => (
+          {local.map((local) => (
             <Link
               key={local.id}
               to={`/locals/${local.id}`}
