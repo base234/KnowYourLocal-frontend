@@ -5,8 +5,11 @@ import Api from "@/api/api";
 import {
   ArrowRight,
   ArrowLeft,
+  ChevronRight,
+  LoaderCircle,
 } from "lucide-react";
 import confetti from "canvas-confetti";
+import GoogleMap from "@/components/GoogleMap";
 
 export default function OnboardingCreateLocal() {
   const { user } = useAuth();
