@@ -25,7 +25,7 @@ export default function Login() {
 
   subscription.onMessage((data) => console.log(data));
 
-  const from = location.state?.from?.pathname || "/create-event";
+  const from = location.state?.from?.pathname || "/create-local";
 
   const sendPing = () => {
     Api.get("/ping-transmit").then(() => {
@@ -60,7 +60,7 @@ export default function Login() {
         if (result.user.is_event_created === 1) {
           navigate("/dashboard");
         } else {
-          navigate("/create-event");
+          navigate("/create-local");
         }
       }
     } catch (error) {

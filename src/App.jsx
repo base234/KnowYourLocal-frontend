@@ -40,7 +40,7 @@ export default function App() {
     <Routes>
       {/* Auth routes - accessible only when not authenticated */}
       <Route
-        path="/auth/login"
+        path="/login"
         element={
           <ProtectedRoute requireAuth={false}>
             <Login />
@@ -48,7 +48,7 @@ export default function App() {
         }
       />
       <Route
-        path="/auth/register"
+        path="/register"
         element={
           <ProtectedRoute requireAuth={false}>
             <Register />
@@ -56,7 +56,7 @@ export default function App() {
         }
       />
       <Route
-        path="/auth/forgot-password"
+        path="/forgot-password"
         element={
           <ProtectedRoute requireAuth={false}>
             <ForgotPassword />
@@ -64,7 +64,7 @@ export default function App() {
         }
       />
       <Route
-        path="/auth/reset-password/:token"
+        path="/reset-password/:token"
         element={
           <ProtectedRoute requireAuth={false}>
             <ResetPassword />
@@ -80,8 +80,8 @@ export default function App() {
           </ProtectedRoute>
         }
       >
-        <Route path="/" element={<Layout />}>
           <Route path="/create-local" element={<OnboardingCreateLocal />} />
+        <Route path="/" element={<Layout />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/locals" element={<MyLocals />} />

@@ -33,15 +33,15 @@ const ProtectedRoute = ({
     if (
       user?.role === "customer" &&
       user?.is_event_created !== 1 &&
-      location.pathname !== "/create-event"
+      location.pathname !== "/create-local"
     ) {
-      return <Navigate to="/create-event" replace />;
+      return <Navigate to="/create-local" replace />;
     }
 
     if (
       user?.role === "customer" &&
       user?.is_event_created === 1 &&
-      location.pathname === "/create-event"
+      location.pathname === "/create-local"
     ) {
       return <Navigate to="/dashboard" replace />;
     }
@@ -56,7 +56,7 @@ const ProtectedRoute = ({
           return <Navigate to="/auth/login" replace />;
       }
     } else {
-      return <Navigate to="/create-event" replace />;
+      return <Navigate to="/create-local" replace />;
     }
   }
 

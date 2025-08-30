@@ -52,13 +52,14 @@ const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
     const path = location.pathname;
     const pathMap = {
       '/dashboard': 'Dashboard',
-      '/my-locals': 'My Locals',
+      '/locals': 'My Locals',
+      '/locals/:local_id': 'My Local',
       '/quick-find': 'Quick Find',
       '/favourites': 'Favourites',
       '/help': 'Help and Support',
       '/guide': 'Quick Guide',
 
-      '/create-event': 'Create Event',
+      '/create-local': 'Create Event',
       '/chat': 'Chat',
     };
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Api from "@/api/api";
 import {
   ArrowRight,
+  ArrowLeft,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
