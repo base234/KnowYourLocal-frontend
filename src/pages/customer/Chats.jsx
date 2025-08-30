@@ -7,7 +7,7 @@ import Api from "@/api/api";
 import "@/components/Chat.css";
 import AiThinkingLoader from "@/components/AiThinkingLoader";
 
-const Chat = () => {
+const Chats = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MapPin, TrendingUp, Users, Heart } from 'lucide-react';
 
@@ -20,40 +20,31 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Section */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Welcome back, {user?.first_name}!
-            </h1>
-            <p className="mt-1 text-gray-600">
-              Here's what's happening with your locals today.
-            </p>
-          </div>
-          <div className="hidden sm:block">
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <div className="w-2 h-2 bg-fern-400 rounded-full"></div>
-              <span>All systems operational</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <Fragment>
+      <h1 className="text-2xl font-bold text-gray-900">
+        Hey {user?.first_name}
+      </h1>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.name} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div
+              key={stat.name}
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+            >
               <div className="flex items-center">
                 <div className={`${stat.bg} p-3 rounded-lg`}>
                   <Icon className={`w-6 h-6 ${stat.color}`} />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    {stat.name}
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stat.value}
+                  </p>
                 </div>
               </div>
             </div>
@@ -65,19 +56,25 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Recent Activity
+            </h3>
           </div>
           <div className="p-6">
             <div className="space-y-4">
               {recentActivity.map((activity) => (
                 <div key={activity.id} className="flex items-start space-x-3">
-                  <div className={`w-3 h-3 rounded-full ${activity.color} mt-2 flex-shrink-0`}></div>
+                  <div
+                    className={`w-3 h-3 rounded-full ${activity.color} mt-2 flex-shrink-0`}
+                  ></div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-900">
-                      <span className="font-medium">{activity.action}</span>{' '}
+                      <span className="font-medium">{activity.action}</span>{" "}
                       <span className="text-fern-600">{activity.target}</span>
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {activity.time}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -93,32 +90,40 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Quick Actions
+            </h3>
           </div>
           <div className="p-6">
             <div className="space-y-3">
               <button className="w-full flex items-center justify-between p-3 text-left bg-fern-50 hover:bg-fern-100 rounded-lg transition-colors duration-200">
                 <div className="flex items-center">
                   <MapPin className="w-5 h-5 text-fern-600 mr-3" />
-                  <span className="text-sm font-medium text-gray-900">Create New Local</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    Create New Local
+                  </span>
                 </div>
               </button>
               <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                 <div className="flex items-center">
                   <TrendingUp className="w-5 h-5 text-gray-600 mr-3" />
-                  <span className="text-sm font-medium text-gray-900">View Analytics</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    View Analytics
+                  </span>
                 </div>
               </button>
               <button className="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200">
                 <div className="flex items-center">
                   <Heart className="w-5 h-5 text-gray-600 mr-3" />
-                  <span className="text-sm font-medium text-gray-900">Manage Favourites</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    Manage Favourites
+                  </span>
                 </div>
               </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 }

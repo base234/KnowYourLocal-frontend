@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, ChevronDown, Settings, User, LogOut, Menu } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
@@ -57,9 +57,7 @@ const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
       '/favourites': 'Favourites',
       '/help': 'Help and Support',
       '/guide': 'Quick Guide',
-      '/sub1': 'Sub Menu 1',
-      '/sub2': 'Sub Menu 2',
-      '/sub3': 'Sub Menu 3',
+
       '/create-event': 'Create Event',
       '/chat': 'Chat',
     };
@@ -68,23 +66,22 @@ const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
   };
 
   return (
-    <nav className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-2">
+    <nav className="sticky top-0 z-40 bg-white border-b border-gray-200">
       <div className="flex items-center justify-between">
-        {/* Left side - Current view name and toggle */}
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-200 mr-2"
+            className="px-4 py-4 bg-fren-100 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
           >
-            <Menu className="w-4 h-4 text-gray-600" />
+            <Menu className="w-5 h-5 text-gray-600" />
           </button>
-          <h1 className="text-lg font-semibold text-gray-900">
+          <h2 className="font-semibold">
             {getCurrentViewName()}
-          </h1>
+          </h2>
         </div>
 
         {/* Right side - Notifications and Profile */}
-        <div className="flex items-center space-x-2">
+        <div className="px-4 flex items-center space-x-2">
           {/* Notifications */}
           <div className="relative" ref={notificationRef}>
             <button

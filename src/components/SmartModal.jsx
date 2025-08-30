@@ -106,7 +106,7 @@ export default function SmartModal({
     <Fragment>
       {/* Backdrop */}
       <div
-        className={`fixed inset-0 duration-200 ease-in-out z-10 ${
+        className={`fixed inset-0 duration-200 ease-in-out z-[9998] ${
           open && !closing
             ? `visible bg-black/60 ${
                 backdropBlur ? `${blurClasses[backdropBlurSize]}` : ""
@@ -119,7 +119,7 @@ export default function SmartModal({
       <div
         id="modal-wrapper"
         onClick={handleClose}
-        className={`fixed inset-0 flex justify-center z-11 ease-in-out duration-75 ${
+        className={`fixed inset-0 flex justify-center z-[9999] ease-in-out duration-75 ${
           open && !closing ? "visible" : "invisible"
         } ${centered ? "items-center" : "items-start"} p-4 ${
           scrollable ? "overflow-y-auto" : ""

@@ -2,23 +2,19 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Api from "@/api/api";
-import GoogleMap from "@/components/GoogleMap";
 import {
-  ArrowLeft,
   ArrowRight,
-  ChevronRight,
-  LoaderCircle,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
-export default function OnboardingCreateEvent() {
-  const { user, markEventAsCreated } = useAuth();
+export default function OnboardingCreateLocal() {
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     local_name: "",
     location: "",
     location_coordinates: null,
-    search_location: null, // Add search location field
+    search_location: null,
     radius_km: 2,
     description: "",
     local_type_id: null,
