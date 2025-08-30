@@ -101,6 +101,7 @@ export default function QuickFind() {
   ];
 
   const RADIUS_METERS = 50000;
+  const api_data_limit = 50;
 
   const performSearch = (options = {}) => {
     setIsLoading(true);
@@ -115,6 +116,7 @@ export default function QuickFind() {
       ll: coordsLL || '',
       radius: RADIUS_METERS,
       fsq_category_ids: fsqIds,
+      limit: api_data_limit,
     };
 
     Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
@@ -182,7 +184,7 @@ export default function QuickFind() {
       </div>
 
       {/* Quick Suggestions */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Suggestions</h3>
         <div className="flex flex-wrap gap-2">
           {quickSuggestions.map((suggestion) => (
@@ -198,7 +200,7 @@ export default function QuickFind() {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Categories */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
