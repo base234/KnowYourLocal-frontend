@@ -65,18 +65,22 @@ const RightSidebar = () => {
   };
 
   const renderTabContent = () => {
-    switch (activeTab) {
-      case "chat":
-        return <ChatTab />;
-      case "favourites":
-        return <FavouritesContent />;
-      case "nearby":
-        return <NearbyContent />;
-      case "info":
-        return <LocalInfoContent />;
-      default:
-        return null;
-    }
+    return (
+      <>
+        <div className={`${activeTab === 'chat' ? 'block' : 'hidden'}`}>
+          <ChatTab />
+        </div>
+        <div className={`${activeTab === 'favourites' ? 'block' : 'hidden'}`}>
+          <FavouritesContent />
+        </div>
+        <div className={`${activeTab === 'nearby' ? 'block' : 'hidden'}`}>
+          <NearbyContent />
+        </div>
+        <div className={`${activeTab === 'info' ? 'block' : 'hidden'}`}>
+          <LocalInfoContent />
+        </div>
+      </>
+    );
   };
 
   return (
