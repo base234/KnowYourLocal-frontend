@@ -7,7 +7,7 @@ import Api from "@/api/api";
 import "@/components/Chat.css";
 import AiThinkingLoader from "@/components/AiThinkingLoader";
 
-const ChatTab = () => {
+const ChatTab = ({ local }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +55,7 @@ const ChatTab = () => {
       },
     };
 
-    Api.post("/chats/stream-text", payload)
+    Api.post(`/locals/${local.id}/chats`, payload)
       .then((response) => {
         const apiData = response.data.data;
         const message = {
