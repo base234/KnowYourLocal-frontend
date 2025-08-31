@@ -69,7 +69,7 @@ const PokemonCard = ({ data }) => {
       background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 50%, #fde68a 100%)',
       border: '2px solid #fbbf24',
       borderRadius: '16px',
-      padding: '20px',
+      padding: '16px',
       marginTop: '16px',
       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       position: 'relative',
@@ -101,20 +101,20 @@ const PokemonCard = ({ data }) => {
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        marginBottom: '20px',
+        marginBottom: '16px',
         position: 'relative',
         zIndex: 1
       }}>
         <div style={{
           background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
           borderRadius: '50%',
-          padding: '8px',
+          padding: '6px',
           boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
         }}>
-          <Zap style={{ width: '16px', height: '16px', color: '#ffffff' }} />
+          <Zap style={{ width: '14px', height: '14px', color: '#ffffff' }} />
         </div>
         <span style={{
-          fontSize: '18px',
+          fontSize: '14px',
           fontWeight: '700',
           background: 'linear-gradient(135deg, #92400e 0%, #b45309 100%)',
           WebkitBackgroundClip: 'text',
@@ -125,18 +125,18 @@ const PokemonCard = ({ data }) => {
 
       <div style={{
         display: 'flex',
-        gap: '20px',
-        flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+        gap: '16px',
+        flexDirection: 'column',
         position: 'relative',
         zIndex: 1
       }}>
         {/* Pokemon Sprite */}
         {sprite && (
-          <div style={{ flexShrink: 0 }}>
+          <div style={{ alignSelf: 'center' }}>
             <div style={{
               background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
               borderRadius: '12px',
-              padding: '16px',
+              padding: '12px',
               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
               border: '2px solid #fbbf24',
               position: 'relative',
@@ -153,8 +153,8 @@ const PokemonCard = ({ data }) => {
                   src={sprite}
                   alt={name}
                   style={{
-                    width: '100px',
-                    height: '100px',
+                    width: '80px',
+                    height: '80px',
                     objectFit: 'contain',
                     display: 'block',
                     filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
@@ -166,14 +166,14 @@ const PokemonCard = ({ data }) => {
                 />
                 <div style={{
                   display: 'none',
-                  width: '100px',
-                  height: '100px',
+                  width: '80px',
+                  height: '80px',
                   background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
                   borderRadius: '8px',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#64748b',
-                  fontSize: '11px',
+                  fontSize: '10px',
                   fontWeight: '500'
                 }}>
                   No Image
@@ -183,13 +183,13 @@ const PokemonCard = ({ data }) => {
               {/* Pokemon ID badge */}
               <div style={{
                 position: 'absolute',
-                top: '12px',
-                right: '12px',
+                top: '8px',
+                right: '8px',
                 background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
                 color: '#ffffff',
-                padding: '4px 8px',
-                borderRadius: '12px',
-                fontSize: '10px',
+                padding: '3px 6px',
+                borderRadius: '8px',
+                fontSize: '9px',
                 fontWeight: '700',
                 boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
               }}>
@@ -201,20 +201,20 @@ const PokemonCard = ({ data }) => {
 
         {/* Pokemon Details */}
         <div style={{
-          flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          gap: '16px'
+          gap: '12px'
         }}>
           {/* Header */}
           <div>
             <h3 style={{
-              fontSize: window.innerWidth < 768 ? '20px' : '24px',
+              fontSize: '18px',
               fontWeight: '800',
               textTransform: 'capitalize',
               color: '#1f2937',
-              marginBottom: '12px',
-              lineHeight: 1.1
+              marginBottom: '8px',
+              lineHeight: 1.1,
+              textAlign: 'center'
             }}>
               {name}
             </h3>
@@ -223,9 +223,10 @@ const PokemonCard = ({ data }) => {
             {safeTypes.length > 0 && (
               <div style={{
                 display: 'flex',
-                gap: '8px',
-                marginBottom: '16px',
-                flexWrap: 'wrap'
+                gap: '6px',
+                marginBottom: '12px',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}>
                 {safeTypes.map((type) => {
                   const typeStyle = typeColors[type] || typeColors.normal;
@@ -235,9 +236,9 @@ const PokemonCard = ({ data }) => {
                       style={{
                         background: typeStyle.bg,
                         color: typeStyle.text,
-                        padding: '4px 10px',
-                        borderRadius: '12px',
-                        fontSize: '11px',
+                        padding: '3px 8px',
+                        borderRadius: '10px',
+                        fontSize: '10px',
                         fontWeight: '600',
                         textTransform: 'capitalize',
                         boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)',
@@ -255,16 +256,16 @@ const PokemonCard = ({ data }) => {
           {/* Basic Info Grid */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: window.innerWidth < 640 ? '1fr' : 'repeat(2, 1fr)',
-            gap: '12px'
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '8px'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '6px',
               background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-              padding: '12px',
-              borderRadius: '10px',
+              padding: '8px',
+              borderRadius: '8px',
               border: '1px solid #fbbf24',
               boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.05)',
               transition: 'all 0.2s ease-in-out'
@@ -272,24 +273,24 @@ const PokemonCard = ({ data }) => {
               <div style={{
                 background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
                 borderRadius: '50%',
-                padding: '8px',
+                padding: '6px',
                 boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
               }}>
-                <Ruler style={{ width: '14px', height: '14px', color: '#ffffff' }} />
+                <Ruler style={{ width: '12px', height: '12px', color: '#ffffff' }} />
               </div>
               <div>
-                <div style={{ fontSize: '10px', color: '#6b7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Height</div>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#1f2937' }}>{(safeHeight / 10).toFixed(1)} m</div>
+                <div style={{ fontSize: '9px', color: '#6b7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Height</div>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#1f2937' }}>{(safeHeight / 10).toFixed(1)} m</div>
               </div>
             </div>
 
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
+              gap: '6px',
               background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-              padding: '12px',
-              borderRadius: '10px',
+              padding: '8px',
+              borderRadius: '8px',
               border: '1px solid #fbbf24',
               boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.05)',
               transition: 'all 0.2s ease-in-out'
@@ -297,14 +298,14 @@ const PokemonCard = ({ data }) => {
               <div style={{
                 background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
                 borderRadius: '50%',
-                padding: '8px',
+                padding: '6px',
                 boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.1)'
               }}>
-                <Weight style={{ width: '14px', height: '14px', color: '#ffffff' }} />
+                <Weight style={{ width: '12px', height: '12px', color: '#ffffff' }} />
               </div>
               <div>
-                <div style={{ fontSize: '10px', color: '#6b7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Weight</div>
-                <div style={{ fontSize: '14px', fontWeight: '700', color: '#1f2937' }}>{(safeWeight / 10).toFixed(1)} kg</div>
+                <div style={{ fontSize: '9px', color: '#6b7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Weight</div>
+                <div style={{ fontSize: '12px', fontWeight: '700', color: '#1f2937' }}>{(safeWeight / 10).toFixed(1)} kg</div>
               </div>
             </div>
           </div>
@@ -313,23 +314,23 @@ const PokemonCard = ({ data }) => {
           {safeAbilities.length > 0 && (
             <div style={{
               background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-              padding: '16px',
-              borderRadius: '10px',
+              padding: '12px',
+              borderRadius: '8px',
               border: '1px solid #fbbf24',
               boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.05)'
             }}>
               <div style={{
-                fontSize: '13px',
+                fontSize: '11px',
                 fontWeight: '700',
                 color: '#1f2937',
-                marginBottom: '12px',
+                marginBottom: '8px',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em'
               }}>Abilities</div>
               <div style={{
                 display: 'flex',
-                gap: '8px',
-                flexWrap: 'wrap'
+                gap: '6px',
+                flexWrap: 'wrap',
               }}>
                 {safeAbilities.map((ability, index) => (
                   <span
@@ -337,9 +338,9 @@ const PokemonCard = ({ data }) => {
                     style={{
                       background: 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)',
                       color: '#1e40af',
-                      padding: '4px 10px',
-                      borderRadius: '12px',
-                      fontSize: '11px',
+                      padding: '3px 8px',
+                      borderRadius: '10px',
+                      fontSize: '10px',
                       fontWeight: '600',
                       textTransform: 'capitalize',
                       border: '1px solid #93c5fd',
@@ -357,23 +358,23 @@ const PokemonCard = ({ data }) => {
           {safeStats.length > 0 && (
             <div style={{
               background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-              padding: '16px',
-              borderRadius: '10px',
+              padding: '12px',
+              borderRadius: '8px',
               border: '1px solid #fbbf24',
               boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.05)'
             }}>
               <div style={{
-                fontSize: '13px',
+                fontSize: '11px',
                 fontWeight: '700',
                 color: '#1f2937',
-                marginBottom: '16px',
+                marginBottom: '12px',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em'
               }}>Base Stats</div>
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: window.innerWidth < 640 ? '1fr' : 'repeat(2, 1fr)',
-                gap: '16px'
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '12px'
               }}>
                 {safeStats.map((stat, index) => {
                   const IconComponent = statIcons[stat.name] || Zap;
@@ -390,25 +391,25 @@ const PokemonCard = ({ data }) => {
                   };
 
                   return (
-                    <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        marginBottom: '3px'
+                        gap: '4px',
+                        marginBottom: '2px'
                       }}>
                         <div style={{
                           background: 'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)',
                           borderRadius: '50%',
-                          padding: '4px',
+                          padding: '3px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center'
                         }}>
-                          <IconComponent style={{ width: '10px', height: '10px', color: '#ffffff' }} />
+                          <IconComponent style={{ width: '8px', height: '8px', color: '#ffffff' }} />
                         </div>
                         <span style={{
-                          fontSize: '10px',
+                          fontSize: '9px',
                           fontWeight: '600',
                           color: '#374151',
                           textTransform: 'capitalize'
@@ -419,13 +420,13 @@ const PokemonCard = ({ data }) => {
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '8px'
+                        gap: '6px'
                       }}>
                         <span style={{
-                          fontSize: '12px',
+                          fontSize: '10px',
                           fontWeight: '700',
                           color: '#1f2937',
-                          minWidth: '24px',
+                          minWidth: '20px',
                           textAlign: 'center'
                         }}>
                           {statValue}
@@ -433,15 +434,15 @@ const PokemonCard = ({ data }) => {
                         <div style={{
                           flex: 1,
                           background: '#e5e7eb',
-                          borderRadius: '6px',
-                          height: '6px',
+                          borderRadius: '4px',
+                          height: '4px',
                           overflow: 'hidden',
                           boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.1)'
                         }}>
                           <div
                             style={{
-                              height: '6px',
-                              borderRadius: '6px',
+                              height: '4px',
+                              borderRadius: '4px',
                               background: `linear-gradient(90deg, ${getStatColor(percentage)} 0%, ${getStatColor(percentage)}dd 100%)`,
                               width: `${percentage}%`,
                               transition: 'width 0.5s ease-in-out',
