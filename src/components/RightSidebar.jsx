@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MessageCircle, Heart, MapPin, X, Sparkles, TrendingUp, Clock } from "lucide-react";
+import { MessageCircle, Heart, MapPin, X, Sparkles, TrendingUp, Clock, Home } from "lucide-react";
 import ChatTab from "@/components/ChatTab";
 
 const RightSidebar = ({ local }) => {
@@ -338,10 +338,10 @@ const LocalInfoContent = () => {
         <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
+              <Home className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h5 className="font-bold text-gray-900 text-lg">Bangalore Local</h5>
+              <h5 className="font-bold text-gray-900 text-lg">Pune Local</h5>
               <p className="text-sm text-gray-600">Your current local area</p>
             </div>
           </div>
@@ -350,21 +350,29 @@ const LocalInfoContent = () => {
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2">
                 <span className="text-sm text-gray-600">Radius</span>
-                <span className="text-sm font-semibold text-gray-900">5.0 km</span>
+                <span className="text-sm font-semibold text-gray-900">
+                  6 km
+                </span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="text-sm text-gray-600">Status</span>
-                <span className="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Active</span>
+                <span className="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">
+                  Active
+                </span>
               </div>
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center py-2">
                 <span className="text-sm text-gray-600">Latitude</span>
-                <span className="text-sm font-semibold text-gray-900">12.9716°N</span>
+                <span className="text-sm font-semibold text-gray-900">
+                  12.9767936
+                </span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="text-sm text-gray-600">Longitude</span>
-                <span className="text-sm font-semibold text-gray-900">77.5946°E</span>
+                <span className="text-sm font-semibold text-gray-900">
+                  77.590082
+                </span>
               </div>
             </div>
           </div>
@@ -379,11 +387,15 @@ const LocalInfoContent = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
               <div className="text-2xl font-bold text-blue-700">24</div>
-              <div className="text-sm text-blue-600 font-medium">Places Found</div>
+              <div className="text-sm text-blue-600 font-medium">
+                Places Found
+              </div>
             </div>
             <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
               <div className="text-2xl font-bold text-green-700">8</div>
-              <div className="text-sm text-green-600 font-medium">Favourites</div>
+              <div className="text-sm text-green-600 font-medium">
+                Favourites
+              </div>
             </div>
           </div>
         </div>
@@ -397,17 +409,23 @@ const LocalInfoContent = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-sm text-gray-700 flex-1">New place added to favourites</span>
+              <span className="text-sm text-gray-700 flex-1">
+                New place added to favourites
+              </span>
               <span className="text-xs text-gray-500 font-medium">2h ago</span>
             </div>
             <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-gray-700 flex-1">Location updated</span>
+              <span className="text-sm text-gray-700 flex-1">
+                Location updated
+              </span>
               <span className="text-xs text-gray-500 font-medium">1d ago</span>
             </div>
             <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
               <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span className="text-sm text-gray-700 flex-1">Local created</span>
+              <span className="text-sm text-gray-700 flex-1">
+                Local created
+              </span>
               <span className="text-xs text-gray-500 font-medium">3d ago</span>
             </div>
           </div>

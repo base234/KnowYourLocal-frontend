@@ -16,13 +16,14 @@ export default function QuickFind() {
   const [showLocationSelector, setShowLocationSelector] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [useApiCategories, setUseApiCategories] = useState(false);
-  const [isLocationLoading, setIsLocationLoading] = useState(true); // Add loading state for location
+  const [isLocationLoading, setIsLocationLoading] = useState(true);
 
+  // Remove the artificial delay and trigger initial search when location is ready
   useEffect(() => {
-    setTimeout(() => {
+    if (userLocation && coordsLL && !isLocationLoading) {
       handleCategoryClick("all");
-    }, 2000);
-  }, []);
+    }
+  }, [userLocation, coordsLL, isLocationLoading]);
 
   // Helper to find fsq ids from fallback set only
   const getFsqIdsForFilter = (filterId) => {
@@ -50,12 +51,15 @@ export default function QuickFind() {
     if (savedLocation) {
       setUserLocation(savedLocation);
       setCoordsLL(`${savedLocation.lat},${savedLocation.lng}`);
-      setShowLocationSelector(false); // Ensure it's closed if we have a location
+      setShowLocationSelector(false);
     } else {
-      // Show location selector if no location is saved
       setShowLocationSelector(true);
     }
-    setIsLocationLoading(false); // Mark location loading as complete
+    // Use a small delay to prevent flash of loading state
+    const timer = setTimeout(() => {
+      setIsLocationLoading(false);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Fetch categories based on current location
@@ -206,7 +210,7 @@ export default function QuickFind() {
                 setShowLocationSelector(true);
               }
             }}
-            className="flex items-center space-x-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg cursor-pointer"
+            className="flex items-center space-x-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg cursor-pointer transition-all duration-200"
           >
             <MapPin className="w-4 h-4 text-gray-600" />
             <span className="text-sm font-medium text-gray-700">
@@ -217,7 +221,7 @@ export default function QuickFind() {
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 min-h-[120px]">
         {isLocationLoading ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fern-500 mx-auto mb-4"></div>
@@ -251,7 +255,7 @@ export default function QuickFind() {
         ) : (
           <div className="flex items-center space-x-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search for locals, places, or activities..."
@@ -263,7 +267,7 @@ export default function QuickFind() {
                     performSearch();
                   }
                 }}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fern-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fern-500 focus:border-transparent transition-all duration-200 ease-out"
               />
             </div>
             <button
@@ -311,7 +315,7 @@ export default function QuickFind() {
                 }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                  className={`inline-block h-4 w-4 rounded-full bg-white transition-transform duration-200 ${
                     useApiCategories ? "translate-x-6" : "translate-x-1"
                   }`}
                 />
