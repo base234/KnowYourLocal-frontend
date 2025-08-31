@@ -280,11 +280,6 @@ export default function LocationSelector({ open, onClose, onLocationSelect }) {
       staticBackdrop={true}
     >
       <div className="space-y-6 pt-2">
-        {/* Subtitle */}
-        <div className="text-center text-gray-600 mb-4">
-          Choose your city to discover amazing places around you
-        </div>
-
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -303,7 +298,7 @@ export default function LocationSelector({ open, onClose, onLocationSelect }) {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">or</span>
+            <span className="px-2 bg-white text-gray-500 uppercase">or</span>
           </div>
         </div>
 
@@ -360,15 +355,13 @@ export default function LocationSelector({ open, onClose, onLocationSelect }) {
               <button
                 key={city.name}
                 onClick={() => handleCitySelect(city)}
-                className="p-4 text-center hover:bg-fern-50 hover:border-fern-300 rounded-lg border-2 border-gray-200 transition-all duration-200 hover:shadow-md group cursor-pointer"
+                className="px-2 py-3 hover:bg-fern-50 hover:border-fern-300 rounded-lg border border-gray-300 group cursor-pointer flex space-x-2"
               >
-                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-200">
-                  {city.icon}
+                <div className="text-3xl">{city.icon}</div>
+                <div className="text-left flex flex-col">
+                  <div className="font-semibold text-sm">{city.name}</div>
+                  <div className="text-xs text-gray-500">{city.state}</div>
                 </div>
-                <div className="font-semibold text-gray-900 text-sm mb-1">
-                  {city.name}
-                </div>
-                <div className="text-xs text-gray-500">{city.state}</div>
               </button>
             ))}
           </div>
