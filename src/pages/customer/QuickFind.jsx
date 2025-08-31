@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Search, MapPin, Filter, Clock, Compass, Pill, Pizza, BriefcaseBusiness, Bike, GraduationCap, Navigation } from 'lucide-react';
+import { Search, MapPin, Filter, Clock, Compass, Pill, Pizza, BriefcaseBusiness, Bike, GraduationCap, Navigation, ToggleLeft, ToggleRight } from 'lucide-react';
 import Api from '../../api/api.jsx';
 import PhotoCarousel from '../../components/PhotoCarousel.jsx';
 import LocationSelector from '../../components/LocationSelector.jsx';
@@ -15,6 +15,7 @@ export default function QuickFind() {
   const [coordsLL, setCoordsLL] = useState(null);
   const [showLocationSelector, setShowLocationSelector] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [useApiCategories, setUseApiCategories] = useState(false);
 
   // Helper to find fsq ids from fallback set only
   const getFsqIdsForFilter = (filterId) => {
@@ -50,7 +51,7 @@ export default function QuickFind() {
 
   // Fetch categories based on current location
   useEffect(() => {
-    if (!coordsLL) return;
+    if (!coordsLL || !useApiCategories) return;
 
     const RESOLUTION = 120; // allowed: 32, 44, 64, 88, 120
     const RADIUS_METERS = 5000;
@@ -81,20 +82,20 @@ export default function QuickFind() {
     const [lat, lon] = coordsLL.split(',').map(Number);
     if (!isNaN(lat) && !isNaN(lon)) {
       setApiCategories([]);
-      // fetchCategories(lat, lon);
+      fetchCategories(lat, lon);
     }
-  }, [coordsLL]);
+  }, [coordsLL, useApiCategories]);
 
   // Tiles shown in UI: either API categories (+ All) or fallback set
   const categoryTiles = useMemo(() => {
-    if (Array.isArray(apiCategories) && apiCategories.length > 0) {
+    if (useApiCategories && Array.isArray(apiCategories) && apiCategories.length > 0) {
       return [
         { id: 'all', label: 'All', icon: Compass },
         ...apiCategories,
       ];
     }
     return fallbackFilters;
-  }, [apiCategories]);
+  }, [apiCategories, useApiCategories]);
 
   const quickSuggestions = [
     'Coffee shops near me',
@@ -263,7 +264,37 @@ export default function QuickFind() {
       {/* Categories */}
       {userLocation && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Categories</h3>
+            
+            {/* Toggle Button */}
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-gray-600">Available Things</span>
+              <button
+                onClick={() => setUseApiCategories(!useApiCategories)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-fern-500 focus:ring-offset-2 ${
+                  useApiCategories ? 'bg-fern-500' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
+                    useApiCategories ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <div className="flex items-center space-x-1">
+                {useApiCategories ? (
+                  <ToggleRight className="w-4 h-4 text-fern-500" />
+                ) : (
+                  <ToggleLeft className="w-4 h-4 text-gray-400" />
+                )}
+                <span className={`text-xs font-medium ${useApiCategories ? 'text-fern-600' : 'text-gray-500'}`}>
+                  {useApiCategories ? 'API' : 'Static'}
+                </span>
+              </div>
+            </div>
+          </div>
+          
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {categoryTiles.map((filter) => {
               const Icon = filter.icon;
@@ -292,6 +323,20 @@ export default function QuickFind() {
               );
             })}
           </div>
+          
+          {/* Status indicator */}
+          {useApiCategories && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <div className={`w-2 h-2 rounded-full ${Array.isArray(apiCategories) && apiCategories.length > 0 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                <span className="text-sm text-blue-700">
+                  {Array.isArray(apiCategories) && apiCategories.length > 0 
+                    ? `Showing ${apiCategories.length} location-specific categories` 
+                    : 'Loading categories from your area...'}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
