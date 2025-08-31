@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState, useRef } from "react";
+import { X } from "lucide-react";
 
 export default function SmartModal({
   open,
@@ -137,13 +138,13 @@ export default function SmartModal({
               : `${animationClasses[animationType].start} opacity-0`
           } ${bump ? "scale-105" : "scale-100"} rounded-lg ${
             scrollable
-              ? "max-h-none" // Remove max height constraint when scrollable
+              ? "max-h-[90vh] overflow-hidden" // Set max height and hide overflow for sticky header
               : "max-h-[90vh] overflow-y-auto"
           }`}
         >
           {showHeader && (
-            <div className="sticky top-0 bg-white z-10 flex justify-between items-center px-6 py-2.5 border-b border-gray-200 rounded-t-lg">
-              <h6 className="text-lg font-semibold">{header}</h6>
+            <div className="sticky top-0 bg-white/95 backdrop-blur-sm z-20 flex justify-between items-center px-6 py-4 border-b border-gray-200 rounded-t-lg shadow-sm transition-all duration-200">
+              <h6 className="text-xl font-semibold text-gray-900">{header}</h6>
               <button
                 onClick={() => {
                   setClosing(true);
@@ -152,14 +153,16 @@ export default function SmartModal({
                     setClosing(false);
                   }, 300);
                 }}
-                className="text-gray-400 hover:text-gray-500 rounded-lg cursor-pointer"
+                className="text-gray-400 hover:text-gray-500 rounded-lg cursor-pointer p-1 hover:bg-gray-100 transition-colors duration-200"
               >
-                <i className="fa-solid fa-times"></i>
+                <X className="w-5 h-5" />
               </button>
             </div>
           )}
 
-          <div className={`${showHeader ? "px-6 pt-4" : "px-6 pt-6"} ${showFooter ? "pb-0" : "pb-6"}`}>
+          <div className={`${showHeader ? "px-6 pt-4" : "px-6 pt-6"} ${showFooter ? "pb-0" : "pb-6"} ${
+            scrollable && showHeader ? "overflow-y-auto max-h-[calc(90vh-80px)]" : ""
+          }`}>
             {children}
           </div>
 
