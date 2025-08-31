@@ -16,6 +16,13 @@ export default function QuickFind() {
   const [showLocationSelector, setShowLocationSelector] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [useApiCategories, setUseApiCategories] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(true); // Add loading state for location
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleCategoryClick("all");
+    }, 2000);
+  }, []);
 
   // Helper to find fsq ids from fallback set only
   const getFsqIdsForFilter = (filterId) => {
@@ -43,10 +50,12 @@ export default function QuickFind() {
     if (savedLocation) {
       setUserLocation(savedLocation);
       setCoordsLL(`${savedLocation.lat},${savedLocation.lng}`);
+      setShowLocationSelector(false); // Ensure it's closed if we have a location
     } else {
       // Show location selector if no location is saved
       setShowLocationSelector(true);
     }
+    setIsLocationLoading(false); // Mark location loading as complete
   }, []);
 
   // Fetch categories based on current location
@@ -115,10 +124,14 @@ export default function QuickFind() {
     setCoordsLL(`${locationData.lat},${locationData.lng}`);
     saveLocation(locationData);
     setShowLocationSelector(false);
+    setIsLocationLoading(false); // Ensure loading state is complete
   };
 
   const performSearch = (options = {}) => {
     // Check if user has selected a location
+    if (isLocationLoading) {
+      return; // Don't search while location is loading
+    }
     if (!coordsLL) {
       setShowLocationSelector(true);
       return;
@@ -159,6 +172,9 @@ export default function QuickFind() {
   const handleCategoryClick = (filterId) => {
     setSelectedFilter(filterId);
     // Check if user has location before searching
+    if (isLocationLoading) {
+      return; // Don't search while location is loading
+    }
     if (!coordsLL) {
       setShowLocationSelector(true);
       return;
@@ -172,42 +188,61 @@ export default function QuickFind() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Quick Find</h1>
-          <p className="mt-1 text-gray-600">Discover amazing locals around you</p>
+          <p className="mt-1 text-gray-600">
+            Discover amazing locals around you
+          </p>
         </div>
 
         {/* Location Display */}
-        {userLocation && (
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-lg">
-              <MapPin className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">
-                {getLocationDisplayName()}
-              </span>
-            </div>
-            <button
-              onClick={() => setShowLocationSelector(true)}
-              className="px-3 py-2 text-sm text-fern-600 hover:text-fern-700 hover:bg-fern-50 rounded-lg transition-colors duration-200"
-            >
-              Change
-            </button>
-          </div>
+        {!isLocationLoading && userLocation && (
+          <button
+            onClick={() => {
+              if (!isLocationLoading && userLocation) {
+                setShowLocationSelector(true);
+              }
+            }}
+            className="flex items-center space-x-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg cursor-pointer"
+          >
+            <MapPin className="w-4 h-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">
+              {getLocationDisplayName()}
+            </span>
+          </button>
         )}
       </div>
 
       {/* Search Bar */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        {!userLocation ? (
+        {isLocationLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fern-500 mx-auto mb-4"></div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Loading Location...
+            </h3>
+            <p className="text-gray-600">
+              Please wait while we load your saved location
+            </p>
+          </div>
+        ) : !userLocation ? (
           <div className="text-center py-8">
             <Navigation className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Location Required</h3>
-            <p className="text-gray-600 mb-4">Please select your location to start discovering places around you</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              Location Required
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Please select your location to start discovering places around you
+            </p>
             <button
-              onClick={() => setShowLocationSelector(true)}
+              onClick={() => {
+                if (!isLocationLoading) {
+                  setShowLocationSelector(true);
+                }
+              }}
               className="px-6 py-3 bg-fern-500 hover:bg-fern-600 text-white rounded-lg transition-colors duration-200"
             >
               Select Location
@@ -223,7 +258,7 @@ export default function QuickFind() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     e.preventDefault();
                     performSearch();
                   }
@@ -231,11 +266,10 @@ export default function QuickFind() {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fern-500 focus:border-transparent"
               />
             </div>
-            <button className="flex items-center px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200 cursor-pointer">
-              <Filter className="w-5 h-5 mr-2" />
-              Filters
-            </button>
-            <button onClick={handleSearchClick} className="px-6 py-3 bg-fern-500 hover:bg-fern-600 text-white rounded-lg transition-colors duration-200 cursor-pointer">
+            <button
+              onClick={handleSearchClick}
+              className="px-6 py-3 bg-fern-500 hover:bg-fern-600 text-white rounded-lg transition-colors duration-200 cursor-pointer"
+            >
               Search
             </button>
           </div>
@@ -262,7 +296,7 @@ export default function QuickFind() {
       </div> */}
 
       {/* Categories */}
-      {userLocation && (
+      {!isLocationLoading && userLocation && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Categories</h3>
@@ -273,29 +307,30 @@ export default function QuickFind() {
               <button
                 onClick={() => setUseApiCategories(!useApiCategories)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-fern-500 focus:ring-offset-2 ${
-                  useApiCategories ? 'bg-fern-500' : 'bg-gray-200'
+                  useApiCategories ? "bg-fern-500" : "bg-gray-200"
                 }`}
               >
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                    useApiCategories ? 'translate-x-6' : 'translate-x-1'
+                    useApiCategories ? "translate-x-6" : "translate-x-1"
                   }`}
                 />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
             {categoryTiles.map((filter) => {
               const Icon = filter.icon;
               return (
                 <button
                   key={filter.id}
                   onClick={() => handleCategoryClick(filter.id)}
-                  className={`cursor-pointer flex items-center justify-center p-4 rounded-lg border-2 transition-colors duration-200 ${selectedFilter === filter.id
-                    ? 'border-fern-500 bg-fern-50 text-fern-700'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                    }`}
+                  className={`cursor-pointer flex items-center justify-center p-4 rounded-lg border-2 transition-colors duration-200 ${
+                    selectedFilter === filter.id
+                      ? "border-fern-500 bg-fern-50 text-fern-700"
+                      : "border-gray-200 hover:border-gray-300 text-gray-600"
+                  }`}
                 >
                   <div className="text-center">
                     {filter.iconUrl ? (
@@ -318,11 +353,17 @@ export default function QuickFind() {
           {useApiCategories && (
             <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full ${Array.isArray(apiCategories) && apiCategories.length > 0 ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    Array.isArray(apiCategories) && apiCategories.length > 0
+                      ? "bg-green-500"
+                      : "bg-yellow-500"
+                  }`}
+                ></div>
                 <span className="text-sm text-blue-700">
                   {Array.isArray(apiCategories) && apiCategories.length > 0
                     ? `Showing ${apiCategories.length} location-specific categories`
-                    : 'Loading categories from your area...'}
+                    : "Loading categories from your area..."}
                 </span>
               </div>
             </div>
@@ -331,100 +372,137 @@ export default function QuickFind() {
       )}
 
       {/* Search Results */}
-      {userLocation && (
+      {!isLocationLoading && userLocation && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Search Results</h3>
-              <span className="text-sm text-gray-500">{searchResults.length} results found</span>
+              <h3 className="text-lg font-semibold">
+                Search Results
+              </h3>
+              <span className="text-sm text-gray-500">
+                {searchResults.length} results found
+              </span>
             </div>
           </div>
 
-        {isLoading && (
-          <div className="p-6 text-sm text-gray-500">Loading...</div>
-        )}
-        {error && !isLoading && (
-          <div className="p-6 text-sm text-red-600">{error}</div>
-        )}
+          {isLoading && (
+            <div className="p-6 text-sm text-gray-500">Loading...</div>
+          )}
+          {error && !isLoading && (
+            <div className="p-6 text-sm text-red-600">{error}</div>
+          )}
 
-        {!isLoading && !error && (
-          <div className="divide-y divide-gray-200">
-            {searchResults.map((result) => {
-              const primaryCategory = Array.isArray(result.categories) && result.categories.length > 0 ? result.categories[0]?.name : undefined;
-              const distanceMeters = typeof result.distance === 'number' ? result.distance : undefined;
-              const distanceKm = distanceMeters !== undefined ? `${(distanceMeters / 1000).toFixed(1)} km` : '—';
-              const address = result?.location?.formatted_address || [result?.location?.address, result?.location?.locality].filter(Boolean).join(', ');
-              const website = result?.website;
-              return (
-                <div key={result.fsq_place_id} className="p-6 hover:bg-gray-50 transition-colors duration-200">
-                  <div className="flex space-x-4">
-                    <div className="w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
-                      <PhotoCarousel fsqPlaceId={result.fsq_place_id} className="w-full h-full" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">{result.name}</h4>
-                          {address && <p className="text-gray-600 mt-1">{address}</p>}
-                        </div>
-                        <div className="flex items-center ml-4">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {distanceKm}
-                          </span>
-                        </div>
+          {!isLoading && !error && (
+            <div className="divide-y divide-gray-200">
+              {searchResults.map((result) => {
+                const primaryCategory =
+                  Array.isArray(result.categories) &&
+                  result.categories.length > 0
+                    ? result.categories[0]?.name
+                    : undefined;
+                const distanceMeters =
+                  typeof result.distance === "number"
+                    ? result.distance
+                    : undefined;
+                const distanceKm =
+                  distanceMeters !== undefined
+                    ? `${(distanceMeters / 1000).toFixed(1)} km`
+                    : "—";
+                const address =
+                  result?.location?.formatted_address ||
+                  [result?.location?.address, result?.location?.locality]
+                    .filter(Boolean)
+                    .join(", ");
+                const website = result?.website;
+                return (
+                  <div
+                    key={result.fsq_place_id}
+                    className="p-6 hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <div className="flex space-x-4">
+                      <div className="w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
+                        <PhotoCarousel
+                          fsqPlaceId={result.fsq_place_id}
+                          className="w-full h-full"
+                        />
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="text-lg font-semibold text-gray-900">
+                              {result.name}
+                            </h4>
+                            {address && (
+                              <p className="text-gray-600 mt-1">{address}</p>
+                            )}
+                          </div>
+                          <div className="flex items-center ml-4">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                              <Clock className="w-3 h-3 mr-1" />
+                              {distanceKm}
+                            </span>
+                          </div>
+                        </div>
 
-                      <div className="flex items-center mt-3 space-x-4">
-                        {primaryCategory && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                            {primaryCategory}
-                          </span>
-                        )}
-                        {website && (
-                          <a href={website} target="_blank" rel="noreferrer" className="text-sm text-fern-700 hover:underline truncate">
-                            Visit website
-                          </a>
-                        )}
-                      </div>
+                        <div className="flex items-center mt-3 space-x-4">
+                          {primaryCategory && (
+                            <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                              {primaryCategory}
+                            </span>
+                          )}
+                          {website && (
+                            <a
+                              href={website}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-sm text-fern-700 hover:underline truncate"
+                            >
+                              Visit website
+                            </a>
+                          )}
+                        </div>
 
-                      <div className="flex items-center mt-4 space-x-3">
-                        <a
-                          className="flex items-center px-4 py-2 bg-fern-500 hover:bg-fern-600 text-white text-sm rounded-lg transition-colors duration-200"
-                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(result.name)} ${encodeURIComponent(address)}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <MapPin className="w-4 h-4 mr-2" />
-                          Get Directions
-                        </a>
-                        {result.link && (
+                        <div className="flex items-center mt-4 space-x-3">
                           <a
-                            className="px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm rounded-lg transition-colors duration-200"
-                            href={result.placemaker_url || result.link}
+                            className="flex items-center px-4 py-2 bg-fern-500 hover:bg-fern-600 text-white text-sm rounded-lg transition-colors duration-200"
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                              result.name
+                            )} ${encodeURIComponent(address)}`}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            View details
+                            <MapPin className="w-4 h-4 mr-2" />
+                            Get Directions
                           </a>
-                        )}
+                          {result.link && (
+                            <a
+                              className="px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm rounded-lg transition-colors duration-200"
+                              href={result.placemaker_url || result.link}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              View details
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
+                );
+              })}
+              {searchResults.length === 0 && (
+                <div className="p-6 text-sm text-gray-500">
+                  No results yet. Try a category or search.
                 </div>
-              );
-            })}
-            {searchResults.length === 0 && (
-              <div className="p-6 text-sm text-gray-500">No results yet. Try a category or search.</div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
         </div>
       )}
 
       {/* Location Selector Modal */}
       <LocationSelector
-        open={showLocationSelector}
+        open={showLocationSelector && !isLocationLoading}
         onClose={() => setShowLocationSelector(false)}
         onLocationSelect={handleLocationSelect}
       />
