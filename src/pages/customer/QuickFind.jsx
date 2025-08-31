@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Search, MapPin, Filter, Clock, Compass, Pill, Pizza, BriefcaseBusiness, Bike, GraduationCap } from 'lucide-react';
+import { Search, MapPin, Filter, Clock, Compass, Pill, Pizza, BriefcaseBusiness, Bike, GraduationCap, Navigation } from 'lucide-react';
 import Api from '../../api/api.jsx';
+import PhotoCarousel from '../../components/PhotoCarousel.jsx';
+import LocationSelector from '../../components/LocationSelector.jsx';
+import { saveLocation, getLocation, hasLocation, getCoordinatesString, getLocationDisplayName } from '../../utils/locationUtils.js';
 
 export default function QuickFind() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,6 +13,8 @@ export default function QuickFind() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [coordsLL, setCoordsLL] = useState(null);
+  const [showLocationSelector, setShowLocationSelector] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
 
   // Helper to find fsq ids from fallback set only
   const getFsqIdsForFilter = (filterId) => {
@@ -31,8 +36,22 @@ export default function QuickFind() {
     { id: 'health', label: 'Health', icon: Pill, fsq_category_ids: "54541900498ea6ccd0202697,63be6904847c3692a84b9b49,52e81612bcbc57f1066b7a27,52f2ab2ebcbc57f1066b8b20,52f2ab2ebcbc57f1066b8b1d,63be6904847c3692a84b9b4a,4bf58dd8d48988d110951735,52f2ab2ebcbc57f1066b8b3c,4f04aa0c2fb6e1c99f3db0b8,63be6904847c3692a84b9b4b,4bf58dd8d48988d1ed941735,4d1cf8421a97d635ce361c31,4bf58dd8d48988d1de931735,63be6904847c3692a84b9bb9,63be6904847c3692a84b9bba,52e81612bcbc57f1066b7a3b,52e81612bcbc57f1066b7a3c,63be6904847c3692a84b9bbb,5f2c43a65b4c177b9a6dcc62,52e81612bcbc57f1066b7a3a,4bf58dd8d48988d178941735,63be6904847c3692a84b9bbc,63be6904847c3692a84b9bbd,4bf58dd8d48988d194941735,63be6904847c3692a84b9bbe,63be6904847c3692a84b9bbf,5f2c5b8b5b4c177b9a6ddf0b,4bf58dd8d48988d196941735,63be6904847c3692a84b9bc0,58daa1558bbb0b01f18ec1f7,56aa371be4b08b9a8d5734ff,4bf58dd8d48988d104941735,4f4531b14b9074f6e4fb0103,63be6904847c3692a84b9bc1,52e81612bcbc57f1066b7a39,63be6904847c3692a84b9bc2,63be6904847c3692a84b9bc3,63be6904847c3692a84b9bc4,58daa1558bbb0b01f18ec1d0,522e32fae4b09b556e370f19,63be6904847c3692a84b9bc5,5744ccdfe4b0c0459246b4af,63be6904847c3692a84b9bc6,63be6904847c3692a84b9bc7,63be6904847c3692a84b9bc8,63be6904847c3692a84b9bc9,4bf58dd8d48988d177941735,63be6904847c3692a84b9bca,63be6904847c3692a84b9bcb,63be6904847c3692a84b9bcc,63be6904847c3692a84b9bcd,63be6904847c3692a84b9bce,63be6904847c3692a84b9bcf,63be6904847c3692a84b9bd0,63be6904847c3692a84b9bd1,63be6904847c3692a84b9bd2,63be6904847c3692a84b9bd3,63be6904847c3692a84b9bd4,63be6904847c3692a84b9bd5,63be6904847c3692a84b9bd6,63be6904847c3692a84b9bd7,63be6904847c3692a84b9bd8,63be6904847c3692a84b9bd9,63be6904847c3692a84b9bda,63be6904847c3692a84b9bdb,63be6904847c3692a84b9bdc,63be6904847c3692a84b9bdd,63be6904847c3692a84b9bde,56aa371be4b08b9a8d573526,4d954af4a243a5684765b473,590a0744340a5803fd8508c3,63be6904847c3692a84b9bdf,50aa9e744b90af0d42d5de0e" },
   ];
 
+  // Check for existing location on component mount
+  useEffect(() => {
+    const savedLocation = getLocation();
+    if (savedLocation) {
+      setUserLocation(savedLocation);
+      setCoordsLL(`${savedLocation.lat},${savedLocation.lng}`);
+    } else {
+      // Show location selector if no location is saved
+      setShowLocationSelector(true);
+    }
+  }, []);
+
   // Fetch categories based on current location
   useEffect(() => {
+    if (!coordsLL) return;
+
     const RESOLUTION = 120; // allowed: 32, 44, 64, 88, 120
     const RADIUS_METERS = 5000;
 
@@ -58,27 +77,13 @@ export default function QuickFind() {
         });
     };
 
-    if (navigator?.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude, longitude } = pos.coords;
-          setApiCategories([]);
-          setCoordsLL(`${latitude},${longitude}`);
-          // fetchCategories(latitude, longitude);
-        },
-        () => {
-          // Geolocation denied/unavailable -> fallback
-          setApiCategories([]);
-          // Fallback to Pune center if location not available
-          // setCoordsLL('18.5246,73.8786');
-        },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-      );
-    } else {
+    // Extract lat, lon from coordsLL string
+    const [lat, lon] = coordsLL.split(',').map(Number);
+    if (!isNaN(lat) && !isNaN(lon)) {
       setApiCategories([]);
-      // setCoordsLL('18.5246,73.8786');
+      // fetchCategories(lat, lon);
     }
-  }, []);
+  }, [coordsLL]);
 
   // Tiles shown in UI: either API categories (+ All) or fallback set
   const categoryTiles = useMemo(() => {
@@ -103,7 +108,21 @@ export default function QuickFind() {
   const RADIUS_METERS = 50000;
   const api_data_limit = 50;
 
+  // Handle location selection
+  const handleLocationSelect = (locationData) => {
+    setUserLocation(locationData);
+    setCoordsLL(`${locationData.lat},${locationData.lng}`);
+    saveLocation(locationData);
+    setShowLocationSelector(false);
+  };
+
   const performSearch = (options = {}) => {
+    // Check if user has selected a location
+    if (!coordsLL) {
+      setShowLocationSelector(true);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -138,6 +157,11 @@ export default function QuickFind() {
 
   const handleCategoryClick = (filterId) => {
     setSelectedFilter(filterId);
+    // Check if user has location before searching
+    if (!coordsLL) {
+      setShowLocationSelector(true);
+      return;
+    }
     // Trigger search immediately on category click
     performSearch({ filterId });
   };
@@ -149,38 +173,72 @@ export default function QuickFind() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Quick Find</h1>
-        <p className="mt-1 text-gray-600">Discover amazing locals around you</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Quick Find</h1>
+          <p className="mt-1 text-gray-600">Discover amazing locals around you</p>
+        </div>
+        
+        {/* Location Display */}
+        {userLocation && (
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-lg">
+              <MapPin className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">
+                {getLocationDisplayName()}
+              </span>
+            </div>
+            <button
+              onClick={() => setShowLocationSelector(true)}
+              className="px-3 py-2 text-sm text-fern-600 hover:text-fern-700 hover:bg-fern-50 rounded-lg transition-colors duration-200"
+            >
+              Change
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Search Bar */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search for locals, places, or activities..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  performSearch();
-                }
-              }}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fern-500 focus:border-transparent"
-            />
+        {!userLocation ? (
+          <div className="text-center py-8">
+            <Navigation className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Location Required</h3>
+            <p className="text-gray-600 mb-4">Please select your location to start discovering places around you</p>
+            <button
+              onClick={() => setShowLocationSelector(true)}
+              className="px-6 py-3 bg-fern-500 hover:bg-fern-600 text-white rounded-lg transition-colors duration-200"
+            >
+              Select Location
+            </button>
           </div>
-          <button className="flex items-center px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200">
-            <Filter className="w-5 h-5 mr-2" />
-            Filters
-          </button>
-          <button onClick={handleSearchClick} className="px-6 py-3 bg-fern-500 hover:bg-fern-600 text-white rounded-lg transition-colors duration-200">
-            Search
-          </button>
-        </div>
+        ) : (
+          <div className="flex items-center space-x-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search for locals, places, or activities..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    performSearch();
+                  }
+                }}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-fern-500 focus:border-transparent"
+              />
+            </div>
+            <button className="flex items-center px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors duration-200 cursor-pointer">
+              <Filter className="w-5 h-5 mr-2" />
+              Filters
+            </button>
+            <button onClick={handleSearchClick} className="px-6 py-3 bg-fern-500 hover:bg-fern-600 text-white rounded-lg transition-colors duration-200 cursor-pointer">
+              Search
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Quick Suggestions */}
@@ -203,46 +261,49 @@ export default function QuickFind() {
       </div> */}
 
       {/* Categories */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {categoryTiles.map((filter) => {
-            const Icon = filter.icon;
-            return (
-              <button
-                key={filter.id}
-                onClick={() => handleCategoryClick(filter.id)}
-                className={`flex items-center justify-center p-4 rounded-lg border-2 transition-colors duration-200 ${selectedFilter === filter.id
-                  ? 'border-fern-500 bg-fern-50 text-fern-700'
-                  : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                  }`}
-              >
-                <div className="text-center">
-                  {filter.iconUrl ? (
-                    <img
-                      src={filter.iconUrl}
-                      alt={filter.label}
-                      className="w-6 h-6 mx-auto mb-2"
-                    />
-                  ) : (
-                    Icon && <Icon className="w-6 h-6 mx-auto mb-2" />
-                  )}
-                  <span className="text-sm font-medium">{filter.label}</span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Search Results */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Search Results</h3>
-            <span className="text-sm text-gray-500">{searchResults.length} results found</span>
+      {userLocation && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Categories</h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {categoryTiles.map((filter) => {
+              const Icon = filter.icon;
+              return (
+                <button
+                  key={filter.id}
+                  onClick={() => handleCategoryClick(filter.id)}
+                  className={`cursor-pointer flex items-center justify-center p-4 rounded-lg border-2 transition-colors duration-200 ${selectedFilter === filter.id
+                    ? 'border-fern-500 bg-fern-50 text-fern-700'
+                    : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                    }`}
+                >
+                  <div className="text-center">
+                    {filter.iconUrl ? (
+                      <img
+                        src={filter.iconUrl}
+                        alt={filter.label}
+                        className="w-6 h-6 mx-auto mb-2"
+                      />
+                    ) : (
+                      Icon && <Icon className="w-6 h-6 mx-auto mb-2" />
+                    )}
+                    <span className="text-sm font-medium">{filter.label}</span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
+      )}
+
+      {/* Search Results */}
+      {userLocation && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">Search Results</h3>
+              <span className="text-sm text-gray-500">{searchResults.length} results found</span>
+            </div>
+          </div>
 
         {isLoading && (
           <div className="p-6 text-sm text-gray-500">Loading...</div>
@@ -262,8 +323,8 @@ export default function QuickFind() {
               return (
                 <div key={result.fsq_place_id} className="p-6 hover:bg-gray-50 transition-colors duration-200">
                   <div className="flex space-x-4">
-                    <div className="w-24 h-24 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-6 h-6 text-gray-400" />
+                    <div className="w-48 h-32 rounded-lg overflow-hidden flex-shrink-0">
+                      <PhotoCarousel fsqPlaceId={result.fsq_place_id} className="w-full h-full" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
@@ -295,7 +356,7 @@ export default function QuickFind() {
                       <div className="flex items-center mt-4 space-x-3">
                         <a
                           className="flex items-center px-4 py-2 bg-fern-500 hover:bg-fern-600 text-white text-sm rounded-lg transition-colors duration-200"
-                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(result.name)}&query_place_id=${encodeURIComponent(result.fsq_place_id)}`}
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(result.name)} ${encodeURIComponent(address)}`}
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -323,7 +384,15 @@ export default function QuickFind() {
             )}
           </div>
         )}
-      </div>
+        </div>
+      )}
+
+      {/* Location Selector Modal */}
+      <LocationSelector
+        open={showLocationSelector}
+        onClose={() => setShowLocationSelector(false)}
+        onLocationSelect={handleLocationSelect}
+      />
     </div>
   );
 }
