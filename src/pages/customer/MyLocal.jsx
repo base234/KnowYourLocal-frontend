@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { MapPin, Calendar, Heart, Share2, MoreVertical } from "lucide-react";
 import Api from "@/api/api";
 import { Link, useParams } from "react-router";
+import RightSidebar from "@/components/RightSidebar";
 
 export default function MyLocals() {
   const { local_id } = useParams();
@@ -51,6 +52,9 @@ export default function MyLocals() {
           ))}
         </div>
       )}
+
+      {/* Right Sidebar */}
+      <RightSidebar />
     </Fragment>
   );
 }
