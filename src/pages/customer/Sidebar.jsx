@@ -1,9 +1,8 @@
-import React, { useState, useRef, Fragment } from 'react';
+import React, { useState, useRef, Fragment, useEffect } from 'react';
 import {
   Home,
   Search,
   Heart,
-  ChevronRight,
   HelpCircle,
   BookOpen,
   Plus,
@@ -13,12 +12,14 @@ import {
 } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logoImg from '@/assets/logo.png';
+import Api from '@/api/api';
 
 const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
   const subMenuTimeoutRef = useRef(null);
+  const [locals, setLocals] = useState([]);
 
   const menuItems = [
     {
@@ -74,6 +75,21 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
     { id: 3, name: 'Coffee place around city', color: 'bg-fern-400' },
   ];
 
+  // Fetch locals data
+  useEffect(() => {
+    const fetchLocals = async () => {
+      try {
+        const response = await Api.get("/locals");
+        if (response.data && response.data.data) {
+          setLocals(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching locals:", error);
+      }
+    };
+
+    fetchLocals();
+  }, []);
 
 
   const handleSubmenuMouseEnter = (itemId) => {
@@ -217,7 +233,7 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
         <div className="my-2 border-t border-gray-200"></div>
 
         {/* Recent Locals */}
-        {isExpanded && (
+        {/* {isExpanded && (
           <div className="my-4 w-full">
             <h2 className="text-xs px-4 font-medium text-gray-400 uppercase tracking-wider">
               Recent Locals
@@ -233,6 +249,29 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
                   ></div>
                   <span className="ml-4 truncate">
                     {local.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )} */}
+
+        {/* My Locals */}
+        {isExpanded && locals.length > 0 && (
+          <div className="my-4 w-full">
+            <h2 className="text-xs px-4 font-medium text-gray-400 uppercase tracking-wider">
+              RECENT LOCALS
+            </h2>
+            <div className="mt-2">
+              {locals.slice(0, 3).map((local) => (
+                <button
+                  key={local.id}
+                  onClick={() => navigate(`/locals/${local.id}`)}
+                  className="py-2 px-4 w-full text-sm text-gray-600 hover:text-gray-800 flex items-center text-left hover:bg-gray-100 cursor-pointer"
+                >
+                  <div className="w-2 h-2 rounded-full bg-fern-400 flex-shrink-0"></div>
+                  <span className="ml-4 truncate">
+                    {local.name || local.title || 'Unnamed Local'}
                   </span>
                 </button>
               ))}

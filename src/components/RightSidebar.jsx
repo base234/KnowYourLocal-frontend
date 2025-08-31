@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MessageCircle, Heart, MapPin, X, Sparkles, TrendingUp, Clock } from "lucide-react";
 import ChatTab from "@/components/ChatTab";
 
-const RightSidebar = () => {
+const RightSidebar = ({ local }) => {
   const [activeTab, setActiveTab] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -68,7 +68,7 @@ const RightSidebar = () => {
     return (
       <>
         <div className={`${activeTab === 'chat' ? 'block' : 'hidden'}`}>
-          <ChatTab />
+          <ChatTab local={local} />
         </div>
         <div className={`${activeTab === 'favourites' ? 'block' : 'hidden'}`}>
           <FavouritesContent />

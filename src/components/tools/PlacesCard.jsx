@@ -7,40 +7,40 @@ const styles = `
   .places-card-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 16px;
     font-family: 'Inter', sans-serif;
   }
 
   .places-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
   }
 
   .places-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #1f2937;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .places-subtitle {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: #6b7280;
     margin: 0;
   }
 
   .places-carousel {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
   }
 
   .place-card {
     background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
     border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 16px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
     position: relative;
@@ -48,8 +48,8 @@ const styles = `
   }
 
   .place-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.04);
     border-color: #3b82f6;
   }
 
@@ -59,32 +59,32 @@ const styles = `
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
+    height: 3px;
     background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-    border-radius: 16px 16px 0 0;
+    border-radius: 12px 12px 0 0;
   }
 
   .place-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .place-category {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   .category-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
   }
 
   .category-name {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: #6b7280;
     text-transform: uppercase;
@@ -94,22 +94,22 @@ const styles = `
   .place-distance {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 16px;
+    font-size: 0.625rem;
     font-weight: 600;
   }
 
   .place-card-content {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .place-name {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 700;
     color: #1f2937;
-    margin: 0 0 12px 0;
-    line-height: 1.4;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -117,10 +117,10 @@ const styles = `
   }
 
   .place-address {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #6b7280;
-    margin: 0 0 12px 0;
-    line-height: 1.5;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -130,15 +130,15 @@ const styles = `
   .place-contact {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-size: 0.875rem;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 0.75rem;
     color: #4b5563;
   }
 
   .place-contact i {
     color: #3b82f6;
-    width: 16px;
+    width: 14px;
   }
 
   .website-link {
@@ -155,14 +155,14 @@ const styles = `
 
   .place-card-footer {
     border-top: 1px solid #f3f4f6;
-    padding-top: 12px;
+    padding-top: 8px;
   }
 
   .place-dates {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.75rem;
+    font-size: 0.625rem;
     color: #9ca3af;
   }
 
@@ -176,16 +176,16 @@ const styles = `
 
   .places-show-more {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 16px;
   }
 
   .show-more-btn {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 25px;
-    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -193,8 +193,8 @@ const styles = `
   }
 
   .show-more-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, #1d4ed8, #1e40af);
   }
 
@@ -204,25 +204,25 @@ const styles = `
 
   .all-places-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
     max-height: 70vh;
     overflow-y: auto;
-    padding-right: 8px;
+    padding-right: 6px;
   }
 
   .all-places-grid::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
 
   .all-places-grid::-webkit-scrollbar-track {
     background: #f1f5f9;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   .all-places-grid::-webkit-scrollbar-thumb {
     background: #cbd5e1;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   .all-places-grid::-webkit-scrollbar-thumb:hover {
@@ -231,50 +231,115 @@ const styles = `
 
   .places-card-error {
     text-align: center;
-    padding: 40px 20px;
+    padding: 32px 16px;
     color: #6b7280;
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   /* Responsive design */
   @media (max-width: 768px) {
     .places-carousel {
       grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 12px;
     }
 
     .all-places-grid {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 10px;
     }
 
     .places-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
     }
 
     .place-card {
-      padding: 16px;
+      padding: 12px;
     }
 
     .place-name {
-      font-size: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .place-address {
+      font-size: 0.6875rem;
+    }
+
+    .category-name {
+      font-size: 0.6875rem;
+    }
+
+    .place-distance {
+      font-size: 0.5625rem;
+      padding: 2px 6px;
     }
   }
 
   @media (max-width: 480px) {
     .places-card-container {
-      padding: 16px;
+      padding: 12px;
     }
 
     .place-card-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 8px;
+      gap: 6px;
     }
 
     .show-more-btn {
-      padding: 10px 20px;
-      font-size: 0.875rem;
+      padding: 8px 16px;
+      font-size: 0.75rem;
+    }
+
+    .places-title {
+      font-size: 1.125rem;
+    }
+
+    .place-card {
+      padding: 10px;
+    }
+
+    .category-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .place-name {
+      font-size: 0.8125rem;
+    }
+
+    .place-address {
+      font-size: 0.625rem;
+    }
+
+    .place-contact {
+      font-size: 0.6875rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .places-card-container {
+      padding: 8px;
+    }
+
+    .place-card {
+      padding: 8px;
+    }
+
+    .place-name {
+      font-size: 0.75rem;
+    }
+
+    .place-address {
+      font-size: 0.5625rem;
+    }
+
+    .category-name {
+      font-size: 0.625rem;
+    }
+
+    .place-distance {
+      font-size: 0.5rem;
+      padding: 2px 4px;
     }
   }
 `;
