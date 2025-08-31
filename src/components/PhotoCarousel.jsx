@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, ImageOff } from 'lucide-react';
-import Api from '../api/api.jsx';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import Api from "../api/api.jsx";
 
 const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
   const [photos, setPhotos] = useState([]);
@@ -13,35 +13,35 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
   const containerRef = useRef(null);
   const imageRefs = useRef({});
 
-
-
   // Fetch photos when fsqPlaceId changes
   useEffect(() => {
     if (!fsqPlaceId) return;
 
     const fetchPhotos = async () => {
-      console.log('Fetching photos for place:', fsqPlaceId);
+      console.log("Fetching photos for place:", fsqPlaceId);
       setIsLoading(true);
       setError(null);
-      
+
       try {
-        const response = await Api.get(`/photos/place?fsq_place_id=${fsqPlaceId}`);
+        const response = await Api.get(
+          `/photos/place?fsq_place_id=${fsqPlaceId}`
+        );
         const data = response.data;
-        console.log('Photos API response:', data);
-        
+        console.log("Photos API response:", data);
+
         if (data.success && data.data.photos) {
           setPhotos(data.data.photos);
           setCurrentIndex(0);
           setLoadedImages(new Set());
           setVisibleImages(new Set());
-          console.log('Photos loaded successfully:', data.data.photos.length);
+          console.log("Photos loaded successfully:", data.data.photos.length);
         } else {
           setPhotos([]);
-          console.log('No photos in response');
+          console.log("No photos in response");
         }
       } catch (err) {
-        console.error('Error fetching photos:', err);
-        setError('Failed to load photos');
+        console.error("Error fetching photos:", err);
+        setError("Failed to load photos");
         setPhotos([]);
       } finally {
         setIsLoading(false);
@@ -53,7 +53,7 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
 
   // Handle image load
   const handleImageLoad = useCallback((photoId) => {
-    setLoadedImages(prev => new Set([...prev, photoId]));
+    setLoadedImages((prev) => new Set([...prev, photoId]));
   }, []);
 
   // Handle image error
@@ -63,26 +63,29 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
   }, []);
 
   // Preload adjacent images for smooth navigation
-  const preloadAdjacentImages = useCallback((currentIdx) => {
-    if (photos.length <= 1) return;
-    
-    const indices = [
-      (currentIdx - 1 + photos.length) % photos.length,
-      (currentIdx + 1) % photos.length
-    ];
-    
-    indices.forEach(index => {
-      const photo = photos[index];
-      if (photo) {
-        setVisibleImages(prev => {
-          if (!prev.has(photo.fsq_photo_id)) {
-            return new Set([...prev, photo.fsq_photo_id]);
-          }
-          return prev;
-        });
-      }
-    });
-  }, [photos]);
+  const preloadAdjacentImages = useCallback(
+    (currentIdx) => {
+      if (photos.length <= 1) return;
+
+      const indices = [
+        (currentIdx - 1 + photos.length) % photos.length,
+        (currentIdx + 1) % photos.length,
+      ];
+
+      indices.forEach((index) => {
+        const photo = photos[index];
+        if (photo) {
+          setVisibleImages((prev) => {
+            if (!prev.has(photo.fsq_photo_id)) {
+              return new Set([...prev, photo.fsq_photo_id]);
+            }
+            return prev;
+          });
+        }
+      });
+    },
+    [photos]
+  );
 
   // Intersection Observer for lazy loading
   useEffect(() => {
@@ -93,19 +96,19 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
         entries.forEach((entry) => {
           const photoId = entry.target.dataset.photoId;
           if (entry.isIntersecting) {
-            setVisibleImages(prev => new Set([...prev, photoId]));
+            setVisibleImages((prev) => new Set([...prev, photoId]));
           }
         });
       },
       {
         root: containerRef.current,
-        rootMargin: '50px', // Start loading 50px before image comes into view
-        threshold: 0.1
+        rootMargin: "50px", // Start loading 50px before image comes into view
+        threshold: 0.1,
       }
     );
 
     // Observe all image containers
-    Object.values(imageRefs.current).forEach(ref => {
+    Object.values(imageRefs.current).forEach((ref) => {
       if (ref) observer.observe(ref);
     });
 
@@ -117,7 +120,7 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
     if (photos.length > 0) {
       const firstPhotoId = photos[0]?.fsq_photo_id;
       if (firstPhotoId) {
-        setVisibleImages(prev => {
+        setVisibleImages((prev) => {
           if (!prev.has(firstPhotoId)) {
             return new Set([...prev, firstPhotoId]);
           }
@@ -162,31 +165,33 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
 
   // Build image URL from prefix and suffix
   const buildImageUrl = (photo) => {
-    if (!photo.prefix || !photo.suffix) return '';
+    if (!photo.prefix || !photo.suffix) return "";
     return `${photo.prefix}original${photo.suffix}`;
   };
 
   if (isLoading) {
     return (
-      <div className={`w-full h-full bg-gray-100 rounded-lg overflow-hidden ${className}`}>
+      <div
+        className={`w-full h-full bg-gray-100 rounded-lg overflow-hidden ${className}`}
+      >
         {/* Skeleton loader with shimmer effect */}
         <div className="w-full h-full bg-gray-200 animate-pulse relative overflow-hidden">
           {/* Shimmer effect */}
-          <div 
-            className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent" 
+          <div
+            className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent"
             style={{
-              animation: 'shimmer 2s infinite',
-              animationTimingFunction: 'ease-in-out'
+              animation: "shimmer 2s infinite",
+              animationTimingFunction: "ease-in-out",
             }}
           ></div>
-          
+
           {/* Photo-like skeleton structure */}
           <div className="w-full h-full flex flex-col justify-between p-4">
             {/* Top section - photo counter placeholder */}
             <div className="flex justify-end">
               <div className="w-12 h-5 bg-gray-300 rounded animate-pulse"></div>
             </div>
-            
+
             {/* Center section - main content placeholder */}
             <div className="flex-1 flex items-center justify-center">
               <div className="flex flex-col items-center space-y-3">
@@ -196,7 +201,7 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
                 <div className="w-24 h-3 bg-gray-300 rounded animate-pulse"></div>
               </div>
             </div>
-            
+
             {/* Bottom section - carousel bullets placeholder */}
             <div className="flex justify-center space-x-2">
               <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse"></div>
@@ -211,15 +216,21 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
 
   if (error) {
     return (
-      <div className={`w-full h-full bg-gray-100 rounded-lg flex items-center justify-center ${className}`}>
-        <div className="text-red-500">{error}</div>
+      <div
+        className={`w-full h-full bg-gray-100 rounded-lg flex items-center justify-center ${className}`}
+      >
+        <div className="text-gray-400 flex flex-col items-center">
+          <ImageOff className="w-8 h-8 mb-2" />
+        </div>
       </div>
     );
   }
 
   if (photos.length === 0) {
     return (
-      <div className={`w-full h-full bg-gray-100 rounded-lg flex items-center justify-center ${className}`}>
+      <div
+        className={`w-full h-full bg-gray-100 rounded-lg flex items-center justify-center ${className}`}
+      >
         <div className="text-gray-400 flex flex-col items-center">
           <ImageOff className="w-8 h-8 mb-2" />
           <span className="text-xs text-gray-500">No photos available</span>
@@ -229,14 +240,14 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
   }
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`relative w-full h-full bg-gray-100 rounded-lg overflow-hidden group ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Main Image with Lazy Loading */}
-      <div 
+      <div
         ref={(el) => {
           imageRefs.current[photos[currentIndex]?.fsq_photo_id] = el;
         }}
@@ -249,14 +260,16 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
             <div className="text-gray-400 text-sm">Loading...</div>
           </div>
         )}
-        
+
         {/* Actual image */}
         {visibleImages.has(photos[currentIndex]?.fsq_photo_id) && (
           <img
             src={buildImageUrl(photos[currentIndex])}
             alt={`Photo ${currentIndex + 1}`}
             className={`w-full h-full object-cover transition-opacity duration-500 ${
-              loadedImages.has(photos[currentIndex]?.fsq_photo_id) ? 'opacity-100' : 'opacity-0'
+              loadedImages.has(photos[currentIndex]?.fsq_photo_id)
+                ? "opacity-100"
+                : "opacity-0"
             }`}
             onLoad={() => handleImageLoad(photos[currentIndex]?.fsq_photo_id)}
             onError={() => handleImageError(photos[currentIndex]?.fsq_photo_id)}
@@ -291,8 +304,8 @@ const PhotoCarousel = ({ fsqPlaceId, className = "" }) => {
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${
                 index === currentIndex
-                  ? 'bg-white scale-125'
-                  : 'bg-white bg-opacity-50 hover:bg-opacity-75'
+                  ? "bg-white scale-125"
+                  : "bg-white bg-opacity-50 hover:bg-opacity-75"
               }`}
             />
           ))}
