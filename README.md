@@ -1,5 +1,7 @@
 # KnowYourLocal Frontend
 
+This is the frontend part of the project.
+
 Here is the link to the backend: [https://github.com/base234/KnowYourLocal-backend](https://github.com/base234/KnowYourLocal-backend)
 
 ## Introduction
