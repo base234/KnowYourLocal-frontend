@@ -14,32 +14,32 @@ Or you are looking for best Caterars, Cuisine and a perfect Venue for your frien
 
 <img src="screenshots/screenshot01.png" />
 <div align="left">
-<img src="screenshots/screenshot02.png" width="380" />
-<img src="screenshots/screenshot03.png" width="380" />
+<img src="screenshots/screenshot02.png" width="400" />
+<img src="screenshots/screenshot03.png" width="400" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot04.png" width="380" />
-<img src="screenshots/screenshot05.png" width="380" />
+<img src="screenshots/screenshot04.png" width="400" />
+<img src="screenshots/screenshot05.png" width="400" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot06.png" width="380" />
-<img src="screenshots/screenshot07.png" width="380" />
+<img src="screenshots/screenshot06.png" width="400" />
+<img src="screenshots/screenshot07.png" width="400" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot08.png" width="380" />
-<img src="screenshots/screenshot09.png" width="380" />
+<img src="screenshots/screenshot08.png" width="400" />
+<img src="screenshots/screenshot09.png" width="400" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot10.png" width="380" />
-<img src="screenshots/screenshot11.png" width="380" />
+<img src="screenshots/screenshot10.png" width="400" />
+<img src="screenshots/screenshot11.png" width="400" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot12.png" width="380" />
-<img src="screenshots/screenshot13.png" width="380" />
+<img src="screenshots/screenshot12.png" width="400" />
+<img src="screenshots/screenshot13.png" width="400" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot14.png" width="380" />
-<img src="screenshots/screenshot15.png" width="380" />
+<img src="screenshots/screenshot14.png" width="400" />
+<img src="screenshots/screenshot15.png" width="400" />
 </div>
 
 ### Tech Stack
