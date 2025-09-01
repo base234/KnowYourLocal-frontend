@@ -11,39 +11,39 @@ Suppose, you just shifted to a new city for a job purpose and wanted to visit a 
 Or you are looking for best Caterars, Cuisine and a perfect Venue for your friends marriage ceremony. KnowYourLocal can do that too. It can even go beyond this by finding you the researched backed data and facts from web searching to help you better with decision and overall increase your capabities to provide you with best.
 
 ### Screenshots
-
+---
 <img src="screenshots/screenshot01.png" />
 <div align="left">
-<img src="screenshots/screenshot02.png" width="400" />
-<img src="screenshots/screenshot03.png" width="400" />
+<img src="screenshots/screenshot02.png" width="412" />
+<img src="screenshots/screenshot03.png" width="412" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot04.png" width="400" />
-<img src="screenshots/screenshot05.png" width="400" />
+<img src="screenshots/screenshot04.png" width="412" />
+<img src="screenshots/screenshot05.png" width="412" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot06.png" width="400" />
-<img src="screenshots/screenshot07.png" width="400" />
+<img src="screenshots/screenshot06.png" width="412" />
+<img src="screenshots/screenshot07.png" width="412" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot08.png" width="400" />
-<img src="screenshots/screenshot09.png" width="400" />
+<img src="screenshots/screenshot08.png" width="412" />
+<img src="screenshots/screenshot09.png" width="412" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot10.png" width="400" />
-<img src="screenshots/screenshot11.png" width="400" />
+<img src="screenshots/screenshot10.png" width="412" />
+<img src="screenshots/screenshot11.png" width="412" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot12.png" width="400" />
-<img src="screenshots/screenshot13.png" width="400" />
+<img src="screenshots/screenshot12.png" width="412" />
+<img src="screenshots/screenshot13.png" width="412" />
 </div>
 <div align="left">
-<img src="screenshots/screenshot14.png" width="400" />
-<img src="screenshots/screenshot15.png" width="400" />
+<img src="screenshots/screenshot14.png" width="412" />
+<img src="screenshots/screenshot15.png" width="412" />
 </div>
 
 ### Tech Stack
-
+---
 - React
 - TailwindCSS
 - AdonisJS
@@ -52,7 +52,7 @@ Or you are looking for best Caterars, Cuisine and a perfect Venue for your frien
 - Foursquare APIs (Places and Geo-tagging)
 
 ### Setting up the project
-
+---
 Before setting up this repo, you must first setup its backend in order to run this project perfectly.
 
 #### 1. Clone the project
