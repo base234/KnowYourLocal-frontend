@@ -6,11 +6,11 @@ Here is the link to the backend: [https://github.com/base234/KnowYourLocal-backe
 
 ## Introduction
 
-A modern, responsive web application built with React that serves as a comprehensive local business discovery and management platform. The application provides users with an intuitive interface to explore, manage, and interact with local businesses in their area.
+A modern, responsive web application that serves as a comprehensive local business discovery and places management platform. The application provides users with an interface to explore, manage, and interact with local businesses in their area.
 
-Suppose, you just shifted to a new city for a job purpose and wanted to visit a best cafe for a sip of cold coffee? Just get on KnowYourLocal, select your city and radius. It will look for you the best places. You can even chat with our assistant bot who can eventually find you the best location.
+Suppose, you just shifted to a new city for a job purpose and wanted to visit a best cafe for a sip of cold coffee? You might think of google maps, but in KnowYourLocal, select your city and radius. It will look for you the best places. It can research about places and create things that you should know. You can even chat with our AI assistant who can eventually find you the best location and you can continue your research.
 
-Or you are looking for best Caterars, Cuisine and a perfect Venue for your friends marriage ceremony. KnowYourLocal can do that too. It can even go beyond this by finding you the researched backed data and facts from web searching to help you better with decision and overall increase your capabities to provide you with best.
+Or you are looking for best Caterers, Cuisine and a perfect Venue for your friends marriage ceremony. KnowYourLocal can do that too. It can even go beyond this by finding you the researched backed data and facts from web searching to help you better with decision and overall increase your confidence to go with the best.
 
 ### Screenshots
 ---
