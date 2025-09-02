@@ -4,6 +4,9 @@ This is the frontend of the project.
 
 Here is the link to the backend: [https://github.com/base234/KnowYourLocal-backend](https://github.com/base234/KnowYourLocal-backend)
 
+<img src="screenshots/screenshot01.png" />
+
+
 ## Introduction
 
 A modern, responsive web application that serves as a comprehensive local business discovery and places management platform. The application provides users with an interface to explore, manage, and interact with local businesses in their area.
@@ -14,7 +17,6 @@ Or you are looking for best Caterers, Cuisine and a perfect Venue for your frien
 
 ### Screenshots
 ---
-<img src="screenshots/screenshot01.png" />
 <div align="left">
 <img src="screenshots/screenshot02.png" width="412" />
 <img src="screenshots/screenshot03.png" width="412" />
