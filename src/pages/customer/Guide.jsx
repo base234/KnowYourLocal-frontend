@@ -109,23 +109,26 @@ export default function Guide() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900">Quick Guide</h1>
-        <p className="mt-2 text-gray-600">Learn how to make the most of Foursquare</p>
-      </div>
+    <div className="max-w-7xl space-y-6">
+      <h1 className="text-2xl font-bold text-gray-900">Quick Guide</h1>
 
       {/* Guide Categories */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {guides.map((guide) => {
           const Icon = guide.icon;
           return (
-            <div key={guide.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-              <div className={`w-12 h-12 ${guide.color} rounded-lg flex items-center justify-center mb-4`}>
+            <div
+              key={guide.id}
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
+            >
+              <div
+                className={`w-12 h-12 ${guide.color} rounded-lg flex items-center justify-center mb-4`}
+              >
                 <Icon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{guide.title}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                {guide.title}
+              </h3>
               <p className="text-gray-600 text-sm mb-4">{guide.description}</p>
               <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                 <span>{guide.duration} read</span>
@@ -144,7 +147,9 @@ export default function Guide() {
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">Interactive Tutorial</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Interactive Tutorial
+            </h2>
             <span className="text-sm text-gray-500">
               Step {activeStep + 1} of {detailedSteps.length}
             </span>
@@ -158,10 +163,10 @@ export default function Guide() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                       completedSteps.includes(index)
-                        ? 'bg-fern-500 text-white'
+                        ? "bg-fern-500 text-white"
                         : index === activeStep
-                        ? 'bg-fern-100 text-fern-600 border-2 border-fern-500'
-                        : 'bg-gray-100 text-gray-500'
+                        ? "bg-fern-100 text-fern-600 border-2 border-fern-500"
+                        : "bg-gray-100 text-gray-500"
                     }`}
                   >
                     {completedSteps.includes(index) ? (
@@ -173,7 +178,9 @@ export default function Guide() {
                   {index < detailedSteps.length - 1 && (
                     <div
                       className={`w-12 h-1 mx-2 ${
-                        completedSteps.includes(index) ? 'bg-fern-500' : 'bg-gray-200'
+                        completedSteps.includes(index)
+                          ? "bg-fern-500"
+                          : "bg-gray-200"
                       }`}
                     />
                   )}
@@ -203,8 +210,8 @@ export default function Guide() {
                 disabled={activeStep === 0}
                 className={`px-6 py-3 rounded-lg transition-colors duration-200 ${
                   activeStep === 0
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                 }`}
               >
                 Previous
@@ -233,8 +240,13 @@ export default function Guide() {
               <MapPin className="w-5 h-5 text-fern-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Add Rich Descriptions</h3>
-              <p className="text-sm text-gray-600">Include detailed descriptions and photos to make your locals more discoverable and useful.</p>
+              <h3 className="font-semibold text-gray-900 mb-1">
+                Add Rich Descriptions
+              </h3>
+              <p className="text-sm text-gray-600">
+                Include detailed descriptions and photos to make your locals
+                more discoverable and useful.
+              </p>
             </div>
           </div>
 
@@ -243,8 +255,13 @@ export default function Guide() {
               <Search className="w-5 h-5 text-lochmara-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Use Search Filters</h3>
-              <p className="text-sm text-gray-600">Narrow down your search results using category filters and distance preferences.</p>
+              <h3 className="font-semibold text-gray-900 mb-1">
+                Use Search Filters
+              </h3>
+              <p className="text-sm text-gray-600">
+                Narrow down your search results using category filters and
+                distance preferences.
+              </p>
             </div>
           </div>
 
@@ -253,8 +270,13 @@ export default function Guide() {
               <Heart className="w-5 h-5 text-razzmatazz-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Organize Favourites</h3>
-              <p className="text-sm text-gray-600">Save interesting places to your favourites and organize them by categories.</p>
+              <h3 className="font-semibold text-gray-900 mb-1">
+                Organize Favourites
+              </h3>
+              <p className="text-sm text-gray-600">
+                Save interesting places to your favourites and organize them by
+                categories.
+              </p>
             </div>
           </div>
 
@@ -263,8 +285,13 @@ export default function Guide() {
               <Settings className="w-5 h-5 text-fern-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-1">Customize Settings</h3>
-              <p className="text-sm text-gray-600">Adjust your preferences and privacy settings to personalize your experience.</p>
+              <h3 className="font-semibold text-gray-900 mb-1">
+                Customize Settings
+              </h3>
+              <p className="text-sm text-gray-600">
+                Adjust your preferences and privacy settings to personalize your
+                experience.
+              </p>
             </div>
           </div>
         </div>
@@ -273,7 +300,9 @@ export default function Guide() {
       {/* Need More Help */}
       <div className="bg-gradient-to-r from-fern-50 to-lochmara-50 rounded-lg p-8 text-center">
         <BookOpen className="w-12 h-12 text-fern-600 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Need more detailed help?</h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          Need more detailed help?
+        </h3>
         <p className="text-gray-600 mb-6">
           Check out our comprehensive help center or contact our support team.
         </p>

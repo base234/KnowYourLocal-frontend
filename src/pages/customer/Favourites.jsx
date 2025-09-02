@@ -86,28 +86,17 @@ export default function Favourites() {
     : favourites.filter(fav => fav.category.toLowerCase() === selectedCategory.toLowerCase());
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Favourites</h1>
-          <p className="mt-1 text-gray-600">Your saved locals and special places</p>
-        </div>
-        <div className="flex items-center space-x-3">
-          <button className="flex items-center px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg transition-colors duration-200">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </button>
-          <button className="flex items-center px-4 py-2 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg transition-colors duration-200">
-            <Share2 className="w-4 h-4 mr-2" />
-            Share Collection
-          </button>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
           <div className="flex items-center">
             <div className="p-3 bg-razzmatazz-100 rounded-lg">
               <Heart className="w-6 h-6 text-razzmatazz-600" />
@@ -118,7 +107,7 @@ export default function Favourites() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
           <div className="flex items-center">
             <div className="p-3 bg-fern-100 rounded-lg">
               <MapPin className="w-6 h-6 text-fern-600" />
@@ -129,7 +118,7 @@ export default function Favourites() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
           <div className="flex items-center">
             <div className="p-3 bg-lochmara-100 rounded-lg">
               <Star className="w-6 h-6 text-lochmara-600" />
@@ -140,7 +129,7 @@ export default function Favourites() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3">
           <div className="flex items-center">
             <div className="p-3 bg-razzmatazz-100 rounded-lg">
               <Clock className="w-6 h-6 text-razzmatazz-600" />
@@ -177,7 +166,7 @@ export default function Favourites() {
       </div>
 
       {/* Favourites Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredFavourites.map((favourite) => (
           <div key={favourite.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
             {/* Image */}

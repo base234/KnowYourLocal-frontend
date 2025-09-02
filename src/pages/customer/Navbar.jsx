@@ -58,8 +58,9 @@ const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
       '/favourites': 'Favourites',
       '/help': 'Help and Support',
       '/guide': 'Quick Guide',
-
+      '/research': 'Research',
       '/create-local': 'Create Event',
+      '/settings': 'Settings',
       '/chat': 'Chat',
     };
 
@@ -170,7 +171,7 @@ const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
                     <User className="w-4 h-4 mr-3" />
                     View Profile
                   </button>
-                  <button className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+                  <button onClick={() => navigate('/settings')} className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150">
                     <Settings className="w-4 h-4 mr-3" />
                     Settings
                   </button>

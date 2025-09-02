@@ -21,11 +21,12 @@ import QuickFind from "@/pages/customer/QuickFind";
 import Favourites from "@/pages/customer/Favourites";
 import Help from "@/pages/customer/Help";
 import Guide from "@/pages/customer/Guide";
-
+import Research from "@/pages/customer/Research";
 import OnboardingCreateLocal from "@/pages/customer/OnboardingCreateLocal";
 import NewLocal from "@/pages/customer/NewLocal";
 import Chats from "@/pages/customer/Chats";
 import MyLocal from "@/pages/customer/MyLocal";
+import Settings from "@/pages/customer/Settings";
 
 // Error page
 import Error404 from "@/pages/Error404";
@@ -91,6 +92,8 @@ export default function App() {
           <Route path="/locals/:local_id" element={<MyLocal />} />
           <Route path="/quick-find" element={<QuickFind />} />
           <Route path="/favourites" element={<Favourites />} />
+          <Route path="/research" element={<Research />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="/guide" element={<Guide />} />
         </Route>

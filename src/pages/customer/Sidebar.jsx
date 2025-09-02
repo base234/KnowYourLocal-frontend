@@ -7,8 +7,9 @@ import {
   BookOpen,
   Plus,
   Building2,
-  TrendingUp,
-  Settings
+  Settings,
+  Microscope,
+  Bot
 } from 'lucide-react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import logoImg from '@/assets/logo.png';
@@ -45,6 +46,18 @@ const Sidebar = ({ isExpanded, setIsExpanded, onOpenNewLocalModal }) => {
       icon: Heart,
       label: 'Favourites',
       path: '/favourites'
+    },
+    {
+      id: 'research',
+      icon: Microscope,
+      label: 'Research',
+      path: '/research'
+    },
+    {
+      id: 'chat',
+      icon: Bot,
+      label: 'Chat',
+      path: '/chats'
     },
   ];
 

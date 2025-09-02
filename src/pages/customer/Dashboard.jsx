@@ -26,13 +26,13 @@ export default function Dashboard() {
       </h1>
 
       {/* Stats Grid */}
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="mt-4 max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
             <div
               key={stat.name}
-              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-3"
             >
               <div className="flex items-center">
                 <div className={`${stat.bg} p-3 rounded-lg`}>
@@ -52,10 +52,10 @@ export default function Dashboard() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="mt-6 max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-4 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">
               Recent Activity
             </h3>
@@ -89,7 +89,7 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
+          <div className="p-4 border-b border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900">
               Quick Actions
             </h3>
