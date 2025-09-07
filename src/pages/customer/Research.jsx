@@ -28,16 +28,31 @@ export default function Firecrawl() {
   };
 
   const generateData = () => {
-    setIsLoading(true);
+    setIsStreaming(true);
 
     Api.get("/locals/stream-text")
       .then((response) => {
-        setFirecrawlContent(response.data.data);
-        setIsLoading(false);
+        setStreamContent(response.data.data);
+        setIsStreaming(false);
       })
       .catch((error) => {
-        setIsLoading(false);
+        setIsStreaming(false);
       });
+
+      // const eventStream = new EventSource("http://localhost:3333/locals/stream-text")
+
+      // eventStream.onmessage = (event) => {
+      //   setStreamContent(event.data);
+      //   setIsStreaming(false);
+      // }
+
+      // eventStream.onerror = (event) => {
+      //   setIsStreaming(false);
+      // }
+
+      // eventStream.onopen = (event) => {
+      //   setIsStreaming(true);
+      // }
   };
 
   const stats = [
@@ -139,13 +154,13 @@ export default function Firecrawl() {
             </button>
           </h3>
         </div>
-        {isLoading && (
+        {isStreaming && (
           <div className="px-3 py-4">
             <LoaderCircle className="w-4 h-4 animate-spin" />
           </div>
         )}
 
-        {!isLoading && <div className="p-4">{firecrawlContent?.markdown}</div>}
+        {!isStreaming && <div className="p-4">{streamContent?.markdown}</div>}
       </div>
     </Fragment>
   );
