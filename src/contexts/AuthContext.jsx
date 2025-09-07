@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import Api from "@/api/api";
+import { useSession, useUser, useDescope } from "@descope/react-sdk";
 
 const AuthContext = createContext();
 
@@ -20,100 +21,43 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { isAuthenticated, isSessionLoading } = useSession();
+  const { user: descopeUser, isUserLoading } = useUser();
+  const { logout: descopeLogout } = useDescope();
 
-  // Check if user is authenticated on app load
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      const token =
-        localStorage.getItem("ks-token") || sessionStorage.getItem("ks-token");
-
-      if (token) {
-        try {
-          const response = await Api.get("/auth/me");
-          const userData = response.data.data;
-
-          setUser(userData);
-          setIsAuthenticated(true);
-        } catch (error) {
-          // Token is invalid, clear it
-          localStorage.removeItem("ks-token");
-          sessionStorage.removeItem("ks-token");
-          setUser(null);
-          setIsAuthenticated(false);
-        }
+    const loadProfile = async () => {
+      if (!isAuthenticated) {
+        setUser(null);
+        return;
       }
-
-      setIsLoading(false);
+      try {
+        const response = await Api.get("/auth/me");
+        const userData = response.data.data;
+        setUser(userData);
+      } catch (error) {
+        setUser(null);
+      }
     };
-
-    checkAuthStatus();
-  }, []);
-
-  const login = async (userData, rememberMe = false) => {
-    try {
-      const response = await Api.post("/auth/login", userData);
-      console.log("Login response:", response.data); // Debug log
-
-      const { token, data: userInfo } = response.data;
-
-      // Store token based on remember me preference
-      if (rememberMe) {
-        localStorage.setItem("ks-token", token);
-        // Set expiration for 7 days
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 7);
-        localStorage.setItem("ks-token-expiry", expirationDate.toISOString());
-      } else {
-        sessionStorage.setItem("ks-token", token);
-      }
-
-      setUser(userInfo);
-      setIsAuthenticated(true);
-
-      return { success: true, user: userInfo };
-    } catch (error) {
-      throw error;
+    if (!isSessionLoading) {
+      loadProfile();
     }
+  }, [isAuthenticated, isSessionLoading]);
+
+  const login = async () => {
+    throw new Error("Legacy login is disabled. Use Descope <Descope flowId>.");
   };
 
-  const loginWithVerificationCode = async (userData, rememberMe = false) => {
-    try {
-      const response = await Api.post("/auth/login/verify-code", userData);
-      console.log("Login verification response:", response.data); // Debug log
-
-      const { token, data: userInfo } = response.data;
-
-      // Store token based on remember me preference
-      if (rememberMe) {
-        localStorage.setItem("ks-token", token);
-        // Set expiration for 7 days
-        const expirationDate = new Date();
-        expirationDate.setDate(expirationDate.getDate() + 7);
-        localStorage.setItem("ks-token-expiry", expirationDate.toISOString());
-      } else {
-        sessionStorage.setItem("ks-token", token);
-      }
-
-      setUser(userInfo);
-      setIsAuthenticated(true);
-
-      return { success: true, user: userInfo };
-    } catch (error) {
-      throw error;
-    }
+  const loginWithVerificationCode = async () => {
+    throw new Error("Legacy login is disabled. Use Descope <Descope flowId>.");
   };
 
   const logout = useCallback(() => {
-    localStorage.removeItem("ks-token");
-    localStorage.removeItem("ks-token-expiry");
-    sessionStorage.removeItem("ks-token");
+    descopeLogout();
     setUser(null);
-    setIsAuthenticated(false);
     navigate("/login");
-  }, [navigate]);
+  }, [descopeLogout, navigate]);
 
   const updateUser = (userData) => {
     setUser(userData);
@@ -137,29 +81,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Check token expiration
-  useEffect(() => {
-    const checkTokenExpiration = () => {
-      const expiry = localStorage.getItem("ks-token-expiry");
-      if (expiry) {
-        const expirationDate = new Date(expiry);
-        if (new Date() > expirationDate) {
-          logout();
-        }
-      }
-    };
-
-    // Check on mount and set up interval
-    checkTokenExpiration();
-    const interval = setInterval(checkTokenExpiration, 60000); // Check every minute
-
-    return () => clearInterval(interval);
-  }, [logout]);
+  // Token expiration is handled by Descope SDK
 
   const value = {
     user,
     isAuthenticated,
-    isLoading,
+    isLoading: isSessionLoading || isUserLoading,
     login,
     loginWithVerificationCode,
     logout,

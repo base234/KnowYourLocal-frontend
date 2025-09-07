@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, ChevronDown, Settings, User, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useDescope } from '@descope/react-sdk';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ currentView, isExpanded, setIsExpanded }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { logout } = useDescope();
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);

@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDescope } from '@descope/react-sdk';
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { logout } = useDescope();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
