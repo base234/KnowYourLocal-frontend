@@ -12,6 +12,8 @@ import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import Privacy from "@/pages/auth/Privacy";
+import Terms from "@/pages/auth/Terms";
 
 // Customer pages
 import Layout from "@/pages/customer/Layout";
@@ -70,6 +72,22 @@ export default function App() {
         element={
           <ProtectedRoute requireAuth={false}>
             <ResetPassword />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/privacy-policy"
+        element={
+          <ProtectedRoute requireAuth={false}>
+            <Privacy />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/terms-of-service"
+        element={
+          <ProtectedRoute requireAuth={false}>
+            <Terms />
           </ProtectedRoute>
         }
       />

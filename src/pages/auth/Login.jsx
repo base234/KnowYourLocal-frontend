@@ -22,9 +22,7 @@ export default function Login() {
       </div>
 
       <div className="relative max-w-lg w-full">
-        <div className="px-8 pt-6 pb-8 bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 animate-fade-in">
-          <img src={logoImg} alt="Foursquare Logo" className="h-10 w-10" />
-          <h2 className="mt-6 font-bold text-2xl">Sign in</h2>
+        <div className="px-8 py-0 bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 animate-fade-in">
 
           <div className="mt-6">
             <Descope

@@ -9,13 +9,11 @@ import App from "./App.jsx";
 import { AuthProvider as AppAuthProvider } from "./contexts/AuthContext";
 
 createRoot(document.getElementById("root")).render(
-
-    <BrowserRouter>
-      <DescopeAuthProvider projectId="P31zCvjcYtbIuIGx3vbcVTEv7msh">
-        <AppAuthProvider>
-          <App />
-        </AppAuthProvider>
-      </DescopeAuthProvider>
-    </BrowserRouter>
-
+  <BrowserRouter>
+    <DescopeAuthProvider projectId="P32OFoipwlOUFfiyVU7p15g1nJRw">
+      <AppAuthProvider>
+        <App />
+      </AppAuthProvider>
+    </DescopeAuthProvider>
+  </BrowserRouter>
 );
