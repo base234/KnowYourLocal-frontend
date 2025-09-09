@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSession } from "@descope/react-sdk";
 import Loader from "./Loader";
 
 const ProtectedRoute = ({
@@ -9,10 +10,11 @@ const ProtectedRoute = ({
   redirectTo = "/login",
   allowedRoles = [],
 }) => {
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { isAuthenticated: isAppAuthenticated, user } = useAuth();
+  const { isAuthenticated, isSessionLoading } = useSession();
   const location = useLocation();
 
-  if (isLoading) {
+  if (isSessionLoading) {
     return <Loader />;
   }
 

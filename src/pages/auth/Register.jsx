@@ -292,19 +292,19 @@ export default function Register() {
             <div className="my-2 py-4 text-center">
               <p className="text-xs text-gray-500">
                 By creating an account, you agree to our{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/terms-of-service"
                   className="text-lochmara-600 hover:text-lochmara-500 font-medium"
                 >
                   Terms of Service
-                </a>{" "}
+                </Link>{" "}
                 and{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/privacy-policy"
                   className="text-lochmara-600 hover:text-lochmara-500 font-medium"
                 >
                   Privacy Policy
-                </a>
+                </Link>
               </p>
             </div>
 
