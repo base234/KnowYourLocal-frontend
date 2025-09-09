@@ -12,9 +12,9 @@ Here is the link to the backend: [https://github.com/base234/KnowYourLocal-backe
 
 A modern, responsive web application that serves as a comprehensive local business discovery and places management platform. The application provides users with an interface to explore, manage, and interact with local businesses in their area.
 
-Suppose, you just shifted to a new city for a job purpose and wanted to visit a best cafe for a sip of cold coffee? You might think of google maps, but in KnowYourLocal, select your city and radius. It will look for you the best places. It can research about places and create things that you should know. You can even chat with our AI assistant who can eventually find you the best location and you can continue your research.
+Suppose you just shifted to a new city for a job and wanted to visit the best cafe for a sip of cold coffee? You might think of Google Maps, but in KnowYourLocal, select your city and radius. It will show you the best places. It can research places and create things that you should know. You can even chat with our AI assistant, who can eventually find you the best location, and you can continue your research.
 
-Or you are looking for best Caterers, Cuisine and a perfect Venue for your friends marriage ceremony. KnowYourLocal can do that too. It can even go beyond this by finding you the researched backed data and facts from web searching to help you better with decision and overall increase your confidence to go with the best.
+Or you are looking for the best Caterers, Cuisine, and a perfect Venue for your friend's marriage ceremony. KnowYourLocal can do that too. It can even go beyond this by finding you the research-backed data and facts from web searching to help you make better decisions and overall increase your confidence to go with the best.
 
 ### Screenshots
 ---
